@@ -3,9 +3,7 @@ import { Text, TextInput, View, Button, StyleSheet, Alert, TouchableOpacity } fr
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { FlatList } from 'react-native-web';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-const Tab = createBottomTabNavigator();
 class ProfilePage extends Component {
     constructor(props){
             super(props);
@@ -200,7 +198,7 @@ class ProfilePage extends Component {
                         <Text onPress={() => this.updatePost(item.post_id)} style={styles.upDatePost} > Update Post </Text>
                     </TouchableOpacity> 
 
-                    <TextInput placeholder = 'Enter Your Post:' 
+                    <TextInput placeholder = 'Update Your Post:' 
                       style={{fontSize: 25, backgroundColor: '#ffffff',textAlign:'center',
                       marginLeft: 10,marginRight:10, marginTop: 10,marginBottom:10, borderWidth: 2}}
                       onChangeText={value => this.setState({post_id2: value})}
@@ -212,10 +210,12 @@ class ProfilePage extends Component {
                 keyExtractor={(item,index) => item.post_id.toString()}
               />
 
-              <TouchableOpacity>
+              {/* <TouchableOpacity>
                     <Text onPress={() => this.props.navigation.navigate('LogOutPage')} style={styles.post} > Log Out </Text>
                    
-              </TouchableOpacity>  
+              </TouchableOpacity>   */}
+
+
 
         
 

@@ -5,12 +5,14 @@ import { ScrollView } from 'react-native-web';
 import {NavigationContainer} from '@react-navigation/native'
 import LoginPage from './LoginPage';
 import SignUpPage from './SignUpPage';
-import LogOutPage from './LogOutPage';
+import MyTabs from './tabNavigator'
 // import MainPage from './MainPage';
 // import { Camera } from 'expo-camera';
 import ProfilePage from './ProfilePage';
 // import friendsPage from './viewFriendsPage';
+
 const Stack = createNativeStackNavigator();
+
 
 function navigator () {
     return (
@@ -18,12 +20,10 @@ function navigator () {
             <Stack.Navigator initialRouteName = "LoginPage">
             <Stack.Screen name = "LoginPage" component={LoginPage} />
             <Stack.Screen name = "SignUpPage" component={SignUpPage} />
-            <Stack.Screen name = "ProfilePage" component={ProfilePage} />
-              <Stack.Screen name = "LogOutPage" component={LogOutPage} />
-             {/* <Stack.Screen name = "friendsPage" component={friendsPage} />  */}
-           
-  
+            <Stack.Screen name="ProfilePage" component={MyTabs} />
+            {/* <Stack.Screen name = "LogOutPage" component={LogOutPage} /> */}
             </Stack.Navigator>
+
         </NavigationContainer>
     );
 }
