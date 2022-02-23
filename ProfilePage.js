@@ -213,19 +213,11 @@ class ProfilePage extends Component {
               />
 
               <TouchableOpacity>
-                    {/* <Text onPress={() => this.props.navigation.navigate('LogOutPage')} style={styles.post} > Log Out </Text> */}
-                    <Text onPress={() => navigation.navigate('LogOutPage')} style={styles.post} > Log Out </Text>
+                    <Text onPress={() => this.props.navigation.navigate('LogOutPage')} style={styles.post} > Log Out </Text>
+                   
               </TouchableOpacity>  
 
-
-
-
-              <NavigationContainer>
-              <Tab.Navigator>
-              <Tab.Screen name="Home" component={HomeScreen} />
-              <Tab.Screen name="Settings" component={SettingsScreen} />
-              </Tab.Navigator>
-              </NavigationContainer>
+        
 
               </View>
             );

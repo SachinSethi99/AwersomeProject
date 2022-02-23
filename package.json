@@ -28,10 +28,7 @@
     "react-native-web": "0.17.1",
     "react-navigation-stack": "^2.10.4"
   },
-  "scripts": {
-  "lint": "eslint app/",
-  "lint:fix": "eslint app/ --fix"
-},
+  
   "devDependencies": {
     "@babel/core": "^7.12.9",
     "@expo/webpack-config": "^0.16.18",

@@ -33,7 +33,6 @@ class SignUpPage extends Component {
                 body: JSON.stringify(to_Send) //stings the values in
             })
             .then((response)=>{
-                console.log("Here", response.status)
                 if(response.status === 201){
                     this.props.navigation.navigate("LoginPage");
                 }else if(response.status ===401){
