@@ -1,129 +1,31 @@
-// import { StatusBar } from 'expo-status-bar';
-// import { StyleSheet, Text, View } from 'react-native';
-
-// export default function App() {
-//   return (
-//     <View style={styles.container}>
-//       <Text>Bruno, Bruno, Bruno, 
-//             He’s from Sporting like Cristiano, 
-//             He goes left, 
-//             He goes right, 
-//             He makes the defences look shi*e, 
-//             He’s our Portuguese magnifico.</Text>
-//       <StatusBar style="auto" />
-//     </View>
-//   );
-// }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: '#fff',
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//   },
-// });
-
 import React, { Component } from 'react';
-import { View, Text, TextInput, Button, FlatList } from 'react-native';
+import { Text, TextInput, View, Button, StyleSheet, Alert, TouchableOpacity } from 'react-native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { ScrollView } from 'react-native-web';
+import {NavigationContainer} from '@react-navigation/native'
+import LoginPage from './LoginPage';
+import SignUpPage from './SignUpPage';
+import LogOutPage from './LogOutPage';
+import MainPage from './MainPage';
+import { Camera } from 'expo-camera';
+import ProfilePage from './ProfilePage';
+import friendsPage from './viewFriendsPage';
+const Stack = createNativeStackNavigator();
 
-class lab2Week extends Component{
-
-  constructor(props){
-    super(props);
-
-    this.state = {
-      items: [],
-      temp_item: ""
-    }
-  }
-
-  addItemToList = () => {
-    let newItems = this.state.items.concat(this.state.temp_item);
-    this.setState({
-      items: newItems,
-      temp_item: ""
-    });
-  }
-
-  remove = (index) => {
-    console.log(index);
-    let newList = this.state.items;
-    newList.splice(index, 1);
-    this.setState({items: newList});
-  }
-
-  render(){
+function navigator () {
     return (
-      <View>
-        <TextInput
-          placeholder='Add to list'
-          onChangeText={value => this.setState({temp_item: value})}
-          value={this.state.temp_item}
-        />
-        <Button 
-          onPress={() => {
-            this.addItemToList();
-          }}
-          title="Add"
-        />
-
-        <FlatList
-          data={this.state.items}
-          renderItem={({item, index}) => 
-            <View>
-              <Text>{item}</Text>
-              <Button
-                onPress={() => this.remove(index)}
-                title="Done"
-              />
-            </View>
-          }
-        />
-      </View>
-    )
-  }
-
-
+        <NavigationContainer>
+            <Stack.Navigator initialRouteName = "LoginPage">
+            <Stack.Screen name = "LoginPage" component={LoginPage} />
+            <Stack.Screen name = "SignUpPage" component={SignUpPage} />
+            <Stack.Screen name = "ProfilePage" component={ProfilePage} />
+             {/* <Stack.Screen name = "LogOutPage" component={LogOutPage} />
+             <Stack.Screen name = "friendsPage" component={friendsPage} /> */}
+           
+  
+            </Stack.Navigator>
+        </NavigationContainer>
+    );
 }
 
-export default lab2Week;
-
-
-
-
-
-// class SayHello extends Component {
-//   render(){
-//     return (
-//       <View>
-//         <Text>Hello {this.props.name}</Text>
-//       </View>
-//     )
-//   };
-// }
-
-// class HelloWorldApp extends Component {
-//   render(){
-//     return (
-//       <View>
-//         <SayHello name="Ash" />
-//       </View>
-//     );
-//   }
-// }
-
-// // class HelloWorldApp extends Component {
-// //   render(){
-
-// //     let name = "Ash";
-
-// //     return (
-// //         <View>
-// //           <Text>Hello {name}</Text>
-// //         </View>
-// //     );
-// //   }
-// // }export default HelloWorldApp
-
-
+export default navigator; 
