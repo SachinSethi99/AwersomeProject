@@ -179,10 +179,6 @@ class ProfilePage extends Component {
                     <Text onPress={() => this.newPost()} style={styles.post} > Add New Post </Text>
                 </TouchableOpacity>  
                
-                <TouchableOpacity>
-                    {/* <Text onPress={() => this.props.navigation.navigate('friendsPage')} style={styles.friends} > Friends Page </Text> */}
-                    <Text onPress={() => navigation.navigate('friendsPage')} style={styles.friends} > Friends Page </Text>
-                 </TouchableOpacity> 
       
                 <FlatList
                 data={this.state.postData}

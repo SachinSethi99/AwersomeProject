@@ -23,6 +23,14 @@ class friendsPage extends Component {
             followingNames: "",
             token: ""
         }
+
+
+
+
+
+
+
+
     };
 
 
@@ -33,7 +41,14 @@ class friendsPage extends Component {
             <View style={styles.background}>
             <Text style= {styles.title}> SPACEBOOK </Text>
             <Text style={styles.profileTitle} > Friends Page </Text>
-
+           
+            <TextInput placeholder = 'Find Friend' 
+                style={{fontSize: 25, backgroundColor: '#ffffff',textAlign:'center',
+                marginLeft: 10,marginRight:10, marginTop: 10,marginBottom:10, borderWidth: 2}}
+                />
+           
+           
+           
             </View>
 
 
