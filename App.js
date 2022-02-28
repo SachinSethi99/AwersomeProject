@@ -11,6 +11,7 @@ import MyTabs from './tabNavigator'
 import ProfilePage from './ProfilePage';
 // import friendsPage from './viewFriendsPage';
 
+
 const Stack = createNativeStackNavigator();
 
 

@@ -3,6 +3,7 @@ import { Text, TextInput, View, Button, StyleSheet, Alert, TouchableOpacity } fr
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { FlatList } from 'react-native-web';
+import { Camera } from 'expo-camera';
 
 class ProfilePage extends Component {
     constructor(props){
@@ -127,6 +128,43 @@ class ProfilePage extends Component {
     }
 
 
+    takePicture = async() =>{
+      if(this.camera){
+        const options = {
+          quality:0.5, 
+          base64:true,
+          onPictureSaved: (data) => this.sendToServer(data)        
+        }
+
+        await this.camera.takePictureAsync(options);
+        console.log(data.uri);
+      }
+    }
+
+
+    sendToServer =async(data) =>{
+      const id = await AsyncStorage.getItem('@session_id');
+      const token = await AsyncStorage.getItem('@session_token');
+
+      let res = await fetch(data.base64);
+      let blob = await res.blob;
+
+      return fetch("http://localhost:3333/api/1.0.0/user/user/" + id +"/photo",{
+        method: "POST",
+        headers:{
+          'Content-Type': 'image/png',
+          'X-Authorization': session_token
+        },
+        body: blob
+      })
+      .then((response)=> {
+        console.log("Picture added", response);
+      })
+      .catch((error)=> {
+        console.log(error);
+      })
+    }
+
     deletePost = async(post_id) => {
       const id = await AsyncStorage.getItem('@session_id');
       const session_token = await AsyncStorage.getItem('@session_token');
@@ -179,6 +217,33 @@ class ProfilePage extends Component {
                     <Text onPress={() => this.newPost()} style={styles.post} > Add New Post </Text>
                 </TouchableOpacity>  
                
+
+                <Camera
+                style={styles.camera}
+                type={this.state.type}
+                ref ={ref => this.camera =ref}
+                >
+                  <View style = {styles.buttonContainer}>
+                  <TouchableOpacity
+                  style = {styles.button}
+                  onPress= {() =>{
+                    this.takePicture();
+                  }}>
+                  
+                  <Text style={styles.text}> camera</Text>
+                  </TouchableOpacity>
+                  </View>
+                </Camera>
+
+                <Image
+                source ={{
+                  uri:path_to_image,
+                  headers:{"X-Authorization":token}
+                }}
+                />
+
+
+
       
                 <FlatList
                 data={this.state.postData}
