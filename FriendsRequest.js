@@ -1,5 +1,5 @@
 import React, { Component, useState } from 'react';
-import { Text, TextInput, View, Button, StyleSheet, SearchBar, Alert, TouchableOpacity } from 'react-native';
+import { Text, TextInput, View, Button, StyleSheet, SearchBar, Alert,Card, CardItem,  TouchableOpacity } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
@@ -10,7 +10,7 @@ class requestfriends extends Component {
     constructor(props) {
         super(props);
         this.state = {
-
+            isLoading: true,
             friendData: [],
             foundUser: [],
             //profileImage: ""
@@ -22,7 +22,9 @@ class requestfriends extends Component {
             followingNames: "",
             token: "",
             user_id: "",
-            user_givenname: ""
+            user_givenname: "",
+            user_familyname:"",
+            query:""
         }
     };
 
@@ -48,9 +50,8 @@ class requestfriends extends Component {
   getData = async () => {
     const token = await AsyncStorage.getItem('@session_token');
     const id = await AsyncStorage.getItem('@session_id');
-    //this.setState({ foundUser: null });
-
-    return fetch("http://localhost:3333/api/1.0.0/search", {
+    
+    return fetch("http://localhost:3333/api/1.0.0/search?q="+ this.state.query, {
           headers: {
             'X-Authorization':  token
           },
@@ -58,8 +59,8 @@ class requestfriends extends Component {
         })
         .then((response) => {
             if(response.status === 200){
-                this.setState({ foundUser: response.data });
-                return response.json()
+               // this.setState({ friendData: response.data });
+               return response.json()
             }else if(response.status === 400){
               console.log("Error")
             }else{
@@ -78,59 +79,52 @@ class requestfriends extends Component {
         })
   }
 
-    // searchFriends = async() =>{
-    //     const token = await AsyncStorage.getItem('@session_token');
-    //     this.setState({ token: token })
-    //     this.setState({ followersNames: "" })
-    //     this.setState({ followingNames: "" })
-    //     this.setState({ foundUser: null })
-    //     axios.get("http://localhost:3333/api/1.0.0/search/")
-    //     .then(resp => {
-    //         this.setState({ foundUser: resp.data });
-    //         this.state.foundUser.map(({ user_id, given_name, family_name, email }) => {
-    //             this.setState({ userid: user_id })
-    //             this.setState({ username: given_name })
-    //             this.setState({ name: family_name })
-    //             this.setState({ useremail: email })
-    //         })
-    //         this.getFollowers(this.state.first_name)
-    //         this.getFollowing(this.state.last_name)
-
-    //     });
-
-    // }
-
-
     sendRequest = async(user_id) => {
-            axios.post("http://localhost:3333/api/1.0.0/user/"+user_id+"/friends", {
+            const token = await AsyncStorage.getItem('@session_token');
+            const id = await AsyncStorage.getItem('@session_id');
+            return fetch("http://localhost:3333/api/1.0.0/user/"+user_id+"/friends", {
                 headers: {
-                    // 'Content-Type': 'application/json',
-                    'X-Authorization': this.state.token
-                }
+                    'Content-Type': 'application/json',
+                    'X-Authorization': token
+                },
+                method: 'POST',
             })
-                .then(() => {
-                    // this.getData();
-                    alert("Follow Completed!")
-                })
-                .catch(() => {
-                    alert("Error")
+                .then((response) => {
+                    if(response.status === 200){
+                        console.log("Follow Completed")
+                    }else if(response.status === 401){
+                        console.log("Follow Not Sent")
+                      }else{
+                          throw 'Something went wrong';
+                      }
+                    }
+                )
+                .catch((error) => {
+                    console.log(error)
                 })
         }
 
-    removeRequest = () => {
-        axios.delete("http://localhost:3333/api/1.0.0/friendrequests/" + user_id , {
-            headers: {
-                'Content-Type': 'application/json',
-                'X-Authorization': this.state.token
-             }
-        })
-            .then(() => {
-                alert("Unfollow Completed!")
-            })
-            .catch(() => {
-                alert("Not Following User!")
-            })
-     }
+    // rejectRequest = () => {
+    //     axios.delete("http://localhost:3333/api/1.0.0/friendrequests/" + user_id , {
+    //         headers: {
+    //             'Content-Type': 'application/json',
+    //             'X-Authorization': this.state.token
+    //          }
+    //     })
+    //         .then(() => {
+    //             if(response.status === 200){
+    //                 console.log("Follow Deleted")
+    //             }else if(response.status === 400){
+    //                 console.log("Error")
+    //               }else{
+    //                   throw 'Something went wrong';
+    //               }
+    //             }
+    //         )
+    //         .catch(() => {
+    //             alert("Not Following User!")
+    //         })
+    //  }
 
 
 
@@ -148,106 +142,194 @@ class requestfriends extends Component {
                 </View>
             );
         } else {
-            return (
-                <View style={styles.background}>
-                    <Text style={styles.title}> SPACEBOOK </Text>
-                    <Text style={styles.profileTitle} > Request Friends </Text>
+//             return (
+//                 <View style={styles.background}>
+//                     <Text style={styles.title}> SPACEBOOK </Text>
+//                     <Text style={styles.profileTitle} > Request Friends </Text>
 
             
-                                 <TextInput placeholder='Send Friend Request'
-                                    style={{
-                                        fontSize: 25, backgroundColor: '#ffffff', textAlign: 'center',
-                                        marginLeft: 10, marginRight: 10, marginTop: 10, marginBottom: 10, borderWidth: 2
-                                    }}
-
-
-                                    
-                                   // onChangeText={value => this.setState({ user_givenname: value })}
-                                  //  value={this.state.user_givenname}
-                                  //value ={filter} onChange={(e) => setFilter(e.target.value)} 
+//                                  <TextInput placeholder='Send Friend Request'
+//                                     style={{
+//                                         fontSize: 25, backgroundColor: '#ffffff', textAlign: 'center',
+//                                         marginLeft: 10, marginRight: 10, marginTop: 10, marginBottom: 10, borderWidth: 2
+//                                     }}                                  
+//                                   value={this.state.query}
+//                                   onChangeText ={  value => this.setState({query:value})  }
                                   
-                                  value={this.state.search}
-                                  onChangeText={(user_givenname) => this.setState({ user_givenname })}
-                                />
+//                                 />
 
-                        <TouchableOpacity>
-                        <Text onPress={() => this.getData()} style={styles.post} > Search </Text>
-                        </TouchableOpacity> 
+//                         <TouchableOpacity>
+//                         <Text onPress={() => this.getData()} style={styles.post} > Search Friend </Text>
+//                         </TouchableOpacity> 
                         
-                        <FlatList
-                        data = {this.state.friendData}
-                        renderItem={({item}) => (
+//                         <FlatList
+//                         data = {this.state.friendData}
+//                         renderItem={({item}) => (
+//                             <View>
 
-                        <View>
-                        <Text style={{height:30, backgroundColor: '#ffffff', color: 'black'}}> User Name: {item.user_givenname} {item.user_familyname}
-                        </Text>
-                    </View>
+//                                 <Text style={{backgroundColor: '#ffffff', color: 'black'}}> User Name : {item.user_givenname} </Text>
+//                                 <TouchableOpacity>
+//                                          <Text onPress={() => this.sendRequest(item.user_id)} style={styles.post} > Search Friend </Text>
+//                                 </TouchableOpacity> 
+//                             </View>
 
-)}
+//                         )}
+                        
+//                         keyExtractor={(item,index) => item.user_givenname}
+//                         />
 
-keyExtractor={(item,index) => item.user_givenname}/>
-
-                                {/* {/* <TouchableOpacity>
-                                    <Text onPress={() => this.getData(item.user_givenname)}>    Search For Friend      </Text>
-                                </TouchableOpacity>  */}
-
-                 
-
-                </View>
-            );
+                
+//                 </View>
+//             );
 
 
-        }
-    }
+//         }
+//     }
+// }
+
+// const styles = StyleSheet.create({
+//     title: {
+//         fontSize: 65,
+//         fontfamily: "lucida grande",
+//         color: "#fffcfa"
+//     },
+//     background: {
+//         backgroundColor: '#4267B2',
+//         flex: 1,
+//     },
+//     profileTitle: {
+//         fontSize: 35,
+//         fontfamily: "lucida grande",
+//         color: "#fffcfa",
+//         marginLeft: 90
+//     },
+//     post: {
+//         fontSize: 20,
+//         fontfamily: "lucida grande",
+//         color: "#fffcfa",
+//         marginTop: -5,
+//         marginLeft: 120
+//     },
+
+//     post3 : {
+
+//         fontSize: 32,
+//         color: '#FFFFFF',
+//         backgroundColor: '#81CD2A',
+//         width: 160,
+//         height: 60,
+//         fontWeight: 'bold',
+//         borderWidth:  3,  
+//         borderColor:  '#e3e327',
+//         marginLeft: 135,
+//         marginTop: 30,
+//         textAlign: 'center'
+//       },
+
+//     post2: {
+//         fontSize: 20,
+//         fontfamily: "lucida grande",
+//         color: "#fffcfa",
+//         marginTop: -5,
+//         marginLeft: 160
+//     }
+// });
+
+return (
+
+    <View>
+
+      <Text> WELCOME </Text>
+
+      <TextInput placeholder='Enter User Name to add friend:' style={{fontSize: 19, backgroundColor: 'orange', width: 350, height: 40, marginLeft: 40,
+
+    marginTop: 10, borderWidth: 2.5, borderColor: '#FFFFFF'}}
+
+    value={this.state.query} onChangeText={value => this.setState({query: value})}/>
+
+
+
+    <TouchableOpacity>
+
+  <Text onPress={() => this.getData()} style={styles.post} > Search </Text>
+
+  </TouchableOpacity>
+
+
+
+ 
+
+    <FlatList
+
+      data = {this.state.friendsData}
+
+      renderItem={({item}) => (
+
+      <View>
+
+          <Text style={{height:20, backgroundColor: '#fafa75', color: 'black'}}> User Name: {item.user_givenname} {item.user_familyname}
+
+          </Text>
+
+       
+
+  <TouchableOpacity>
+
+  <Text onPress={() => this.sendRequest(item.user_id)} style={styles.post} > Add </Text>
+
+  </TouchableOpacity>
+
+     </View>
+
+
+
+    )}
+
+      keyExtractor={(item,index) => item.user_givenname}/>
+
+    </View>
+
+  );
+
+ }
+
 }
 
+}
+
+
+
 const styles = StyleSheet.create({
-    title: {
-        fontSize: 65,
-        fontfamily: "lucida grande",
-        color: "#fffcfa"
-    },
-    background: {
-        backgroundColor: '#4267B2',
-        flex: 1,
-    },
-    profileTitle: {
-        fontSize: 35,
-        fontfamily: "lucida grande",
-        color: "#fffcfa",
-        marginLeft: 90
-    },
-    post: {
-        fontSize: 20,
-        fontfamily: "lucida grande",
-        color: "#fffcfa",
-        marginTop: -5,
-        marginLeft: 120
-    },
 
-    post3 : {
+post : {
 
-        fontSize: 32,
-        color: '#FFFFFF',
-        backgroundColor: '#81CD2A',
-        width: 160,
-        height: 60,
-        fontWeight: 'bold',
-        borderWidth:  3,  
-        borderColor:  '#e3e327',
-        marginLeft: 135,
-        marginTop: 30,
-        textAlign: 'center'
-      },
+    fontSize: 32,
 
-    post2: {
-        fontSize: 20,
-        fontfamily: "lucida grande",
-        color: "#fffcfa",
-        marginTop: -5,
-        marginLeft: 160
-    }
+    color: '#FFFFFF',
+
+    backgroundColor: '#81CD2A',
+
+    width: 160,
+
+    height: 60,
+
+    fontWeight: 'bold',
+
+    borderWidth:  3,  
+
+    borderColor:  '#e3e327',
+
+    marginLeft: 135,
+
+    marginTop: 30,
+
+    textAlign: 'center'
+
+  },
+
 });
 
 export default requestfriends
+
+
 
