@@ -104,30 +104,6 @@ class requestfriends extends Component {
                 })
         }
 
-    // rejectRequest = () => {
-    //     axios.delete("http://localhost:3333/api/1.0.0/friendrequests/" + user_id , {
-    //         headers: {
-    //             'Content-Type': 'application/json',
-    //             'X-Authorization': this.state.token
-    //          }
-    //     })
-    //         .then(() => {
-    //             if(response.status === 200){
-    //                 console.log("Follow Deleted")
-    //             }else if(response.status === 400){
-    //                 console.log("Error")
-    //               }else{
-    //                   throw 'Something went wrong';
-    //               }
-    //             }
-    //         )
-    //         .catch(() => {
-    //             alert("Not Following User!")
-    //         })
-    //  }
-
-
-
 
     render() {
         if (this.state.isLoading) {

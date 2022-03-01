@@ -72,7 +72,7 @@ class ProfilePage extends Component {
     //send message to server if already authenticated, wait on a promise before doing anything else
     newPost = async () => {
     if (!this.state.isAuthenticated) {
-      console.log("Error, not authenticated")
+      console.log("Error not authenticated")
     }
     else {
       const id = await AsyncStorage.getItem('@session_id');

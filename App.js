@@ -5,10 +5,10 @@ import { ScrollView } from 'react-native-web';
 import {NavigationContainer} from '@react-navigation/native'
 import LoginPage from './LoginPage';
 import SignUpPage from './SignUpPage';
-import MyTabs from './tabNavigator'
+import MyTabs from './tabNavigator';
 // import MainPage from './MainPage';
 // import { Camera } from 'expo-camera';
-import ProfilePage from './ProfilePage';
+//import ProfilePage from './ProfilePage';
 // import friendsPage from './viewFriendsPage';
 
 
