@@ -237,8 +237,8 @@ class ProfilePage extends Component {
 
                 {/* <Image
                 source ={{
-                  uri:path_to_image,
-                  headers:{"X-Authorization":token}
+                  //uri:path_to_image,
+                 // headers:{"X-Authorization":token}
                 }}
                 /> */}
 
