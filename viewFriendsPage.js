@@ -133,8 +133,8 @@ class followerPage extends Component {
         } else{
 
             return (      
-              <View>
-                <Text> FRIEND REQUESTS  </Text>
+              <View style={styles.background}>
+                <Text style={styles.profileTitle}> SEARCH REQUESTS  </Text>
               <FlatList
               data = {this.state.friendsData}
               renderItem={({item}) => (
@@ -167,6 +167,21 @@ class followerPage extends Component {
       }
 
 const styles = StyleSheet.create({
+  title:{
+    fontSize:65,
+    fontfamily:"lucida grande",
+    color: "#fffcfa"
+},
+  background : {
+      backgroundColor: '#4267B2',
+      flex : 1,
+  },
+  profileTitle:{
+    fontSize:35,
+    fontfamily:"lucida grande",
+    color: "#fffcfa",
+    marginLeft: 90
+  },
 
 post : {
 

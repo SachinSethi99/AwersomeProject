@@ -235,12 +235,12 @@ class ProfilePage extends Component {
                   </View>
                 </Camera>
 
-                <Image
+                {/* <Image
                 source ={{
                   uri:path_to_image,
                   headers:{"X-Authorization":token}
                 }}
-                />
+                /> */}
 
 
 

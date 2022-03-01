@@ -10,8 +10,8 @@ const Tab = createBottomTabNavigator();
     return (
       <Tab.Navigator>
         <Tab.Screen name="Profile Page" component={ProfilePage} />
-        <Tab.Screen name="Search For Friend" component={followerPage} />
-        <Tab.Screen name="Friend Request" component={requestfriends} />
+        <Tab.Screen name="Outstanding Friend Requests" component={followerPage} />
+        <Tab.Screen name="Send Friend Request" component={requestfriends} />
         <Tab.Screen name = "Log Out" component={LogOutPage} />
       </Tab.Navigator>
     );

@@ -8,8 +8,8 @@ class LoginPage extends Component {
           this.state = {
               isLoading: true, //boolean varible, in built property from the server
               id: '',
-              email:'sp@gmail.com',
-              password: 'spacebook',
+              email:'adil@gmail.com',
+              password: 'adil12345',
           };        
         }
 
