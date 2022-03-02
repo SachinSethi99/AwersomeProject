@@ -3,178 +3,137 @@ import { Text, TextInput, View, Button, StyleSheet, Title, TouchableOpacity } fr
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 class editProfileDetails extends Component {
-    constructor(props) {
+    constructor(props){
         super(props);
-        /* set default placeholder values that we will set our data to */
         this.state = {
-            isLoading: true,
-            token: "",
-            user_id: "",
-            username: "",
-            name: "",
-            user_givenname: "",
-            user_familyname: "",
-            email: "",
-            password: "",
-            id: ""
-        }
-    };
-    getData = async () => {
-        const token = await AsyncStorage.getItem('@session_token');
-        const id = await AsyncStorage.getItem('@session_id');
+            isLoading: true, //boolean varible
+            id: '',
+            first_name: '',
+            last_name: '',
+            email:'',
+            //password: '',
+            new_first_name:'',
+            new_last_name:'',
+            new_email:'',
+           // new_password:''
+        };
+      
+      }
 
-        return fetch("http://localhost:3333/api/1.0.0/user/" + id, {
-            headers: {
-                'X-Authorization': token
-            },
-            method: 'GET',
-        })
-            .then((response) => {
-                if (response.status === 200) {
-                    return response.json()
-                } else if (response.status === 401) {
-                    console.log("Error")
-                } else {
-                    throw 'Something went wrong';
-                }
-            })
-            .then((responseJson) => {
-                this.setState({
-                    isLoading: false,
-                    friendsData: responseJson
-                })
-
-            })
-            .catch((error) => {
-                console.log(error);
-            })
-    }
-
-
-    checkLoggedIn = async () => {
-        const value = await AsyncStorage.getItem('@session_token');
-        if (value == null) {
-            this.props.navigation.navigate('LoginPage');
-        }
-    };
-
-    componentDidMount() {
-        this.unsubscribe = this.props.navigation.addListener('focus', () => {
-            this.checkLoggedIn();
-        });
-        this.getData();
-    }
-
-    componentWillUnmount() {
-        this.unsubscribe();
-    }
-
-    updateAccount = async () => {
-        const token = await AsyncStorage.getItem('@session_token');
-        const id = await AsyncStorage.getItem('@session_id');
-        return fetch('http://localhost:3333/api/1.0.0/user/' + id, {
-            given_name: this.state.given_name,
-            family_name: this.state.family_name,
-            email: this.state.email,
-            password: this.state.password
-        }, {
-            headers: {
-                'Content-Type': 'application/json',
-                'X-Authorization': this.state.token
-            },
-            method: 'PATCH',
-        })
-            .then((response) => {
-                if (response.status === 200) {
-                    this.props.navigation.navigate('LoginPage')
-                    console.log("Account information updated successfully")
-
-                } else if (response.status === 401) {
-                    console.log("error")
-                } else {
-                    throw 'Something went wrong';
-                }
+      updateDetails = async() =>
+      {
+          let to_Send = {};       
+          if(this.state.first_name !=this.state.new_first_name){
+                  to_Send['first_name'] = this.state.first_name;
             }
-            )
-            .catch((error) => {
-                console.log(error)
-            })
-    }
-    render() {
-        if (this.state.isLoading) {
-            return (
-                <View
-                    style={{
-                        flex: 1,
-                        flexDirection: 'column',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                    }}>
-                </View>
-            );
-        } else {
-            return (
-                <View style={styles.background}>
-                    <Title>Edit Account Details!</Title>
 
-                    <TextInput
-                        placeholder="First Name"
-                        onChangeText={(user_givenname) => this.setState({user_givenname })}
-                        value={this.state.username}
-                    />
+            if(this.state.last_name !=this.state.new_last_name){
+                to_Send['last_name'] = this.state.last_name;
+          }
 
-                    <TextInput
-                        placeholder="Second Name"
-                        onChangeText={(user_familyname) => this.setState({user_familyname })}
-                        value={this.state.name}
-                    />
+          if(this.state.email !=this.state.new_email){
+            to_Send['email'] = this.state.email;
+            }
 
-                    <TextInput
-                        placeholder="Email"
-                        keyboardType="email-address"
-                        onChangeText={(email) => this.setState({ email })}
-                        value={this.state.email}
-                    />
+        //   if(this.state.password !=this.state.password){
+        //      to_Send['password'] = this.state.password;
+        //      }
 
-                    <TextInput
-                        placeholder="Password"
-                        secureTextEntry={true}
-                        onChangeText={(password) => this.setState({ password })}
-                        value={this.state.password}
-                    />
+           // console.log(JSON.stringify(to_Send));
+
+            const token = await AsyncStorage.getItem('@session_token');
+            const id = await AsyncStorage.getItem('@session_id');
+          
+
+          return fetch("http://localhost:3333/api/1.0.0/user/"+id,{ 
+              method: 'PATCH', 
+              headers: {
+                  'Content-Type': 'application/json',
+                  'X-Authorization':  token
+              }, 
+              body: JSON.stringify(to_Send) //stings the values in
+          })
+          .then((response)=>{
+              if(response.status === 200){
+                  this.props.navigation.navigate("LoginPage");
+              }else if(response.status ===401){
+                  throw "email and password already used before or either/both email password are invlaid"
+              }else{
+                  throw "Something happened"
+              }  
+          }).catch((error)=>{
+              console.log(error);
+          })
+          
+      }//connect to the API, get the token on the website, I can see it 
+
+      render(){
+          return (
+          
+              <View style={styles.background}>
+              <Text style= {styles.title}> SPACEBOOK </Text>
+             
+              <Text style= {styles.details}>Update Details </Text>
+              <TextInput
+              placeholder='First Name' 
+              style = {{fontSize: 25, backgroundColor: '#ffffff',textAlign:'center',
+              marginLeft: 10,marginRight:10, marginTop: 10,marginBottom:0, borderWidth: 2 }}
+              onChangeText={value => this.setState({first_name:value})}
+              value={this.state.first_name}
+              />
+
+            
+              <TextInput
+              placeholder='Second Name' 
+              style = {{fontSize: 25, backgroundColor: '#ffffff',textAlign:'center',
+              marginLeft: 10,marginRight:10, marginTop: 10,marginBottom:0, borderWidth: 2 }}
+              onChangeText={value => this.setState({last_name:value})}
+              value={this.state.last_name}
+              />
+
+              <TextInput
+              placeholder='Email Address' 
+              style = {{fontSize: 25, backgroundColor: '#ffffff',textAlign:'center',
+              marginLeft: 10,marginRight:10, marginTop: 10,marginBottom:10, borderWidth: 2 }}
+              onChangeText={value => this.setState({email:value})}
+              value={this.state.email}
+              />
 
 
-
-                    <Button onPress={() => this.updateAccount()} style={{
-                        top: 250,
-                        width: 200,
-                        alignSelf: 'center',
-                        borderRadius: 10,
-                        justifyContent: 'center',
-                    }}><Text>Update Account</Text>
-
-                    </Button>
-                </View>
-            );
+              <TouchableOpacity>
+                  <Text onPress={()=> this.updateDetails()} style= {styles.createAccount}> Update Account</Text>
+              </TouchableOpacity>
+              </View>
+          )
         }
-    }
 }
-
 const styles = StyleSheet.create({
-    title: {
-        fontSize: 65,
-        fontfamily: "lucida grande",
-        color: "#fffcfa"
-    },
-    background: {
-        backgroundColor: '#4267B2',
-        flex: 1,
-    },
-    profileTitle: {
-        fontSize: 35,
-        fontfamily: "lucida grande",
-        color: "#fffcfa",
-        marginLeft: 90
-    }
-})
+  background : {
+      backgroundColor: '#4267B2',
+      flex : 1,
+  },
+  title:{
+      fontSize:65,
+      fontfamily:"lucida grande",
+      color: "#fffcfa"
+  },
+  
+  details:{
+      marginTop:200,
+      marginLeft:140,
+      fontSize:20,
+      fontfamily:"lucida grande",
+      color: "#fffcfa"
+
+  },
+
+  createAccount:{
+      fontSize:20,
+      fontfamily:"lucida grande",
+      color: "#fffcfa",
+      marginTop:10,
+      marginLeft:120
+
+  }
+});
 export default editProfileDetails

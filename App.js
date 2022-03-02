@@ -8,8 +8,9 @@ import SignUpPage from './SignUpPage';
 import MyTabs from './tabNavigator';
 // import MainPage from './MainPage';
 // import { Camera } from 'expo-camera';
-//import ProfilePage from './ProfilePage';
+import ProfilePage from './ProfilePage';
 // import friendsPage from './viewFriendsPage';
+import CameraPage from './Camera';
 
 
 const Stack = createNativeStackNavigator();
@@ -19,9 +20,10 @@ function navigator () {
     return (
         <NavigationContainer>
             <Stack.Navigator initialRouteName = "LoginPage">
-            <Stack.Screen name = "LoginPage" component={LoginPage} />
+            <Stack.Screen name = "LoginPage" component={LoginPage} options={{headerShown:false,}} />
             <Stack.Screen name = "SignUpPage" component={SignUpPage} />
-            <Stack.Screen name="ProfilePage" component={MyTabs} />
+            <Stack.Screen name ="CameraPage" component={CameraPage}/>
+            <Stack.Screen name="ProfilePage" component={MyTabs}options={{headerShown:false,}} />
             {/* <Stack.Screen name = "LogOutPage" component={LogOutPage} /> */}
             </Stack.Navigator>
 

@@ -127,44 +127,6 @@ class ProfilePage extends Component {
       })
     }
 
-
-    takePicture = async() =>{
-      if(this.camera){
-        const options = {
-          quality:0.5, 
-          base64:true,
-          onPictureSaved: (data) => this.sendToServer(data)        
-        }
-
-        await this.camera.takePictureAsync(options);
-        console.log(data.uri);
-      }
-    }
-
-
-    sendToServer =async(data) =>{
-      const id = await AsyncStorage.getItem('@session_id');
-      const token = await AsyncStorage.getItem('@session_token');
-
-      let res = await fetch(data.base64);
-      let blob = await res.blob;
-
-      return fetch("http://localhost:3333/api/1.0.0/user/user/" + id +"/photo",{
-        method: "POST",
-        headers:{
-          'Content-Type': 'image/png',
-          'X-Authorization': session_token
-        },
-        body: blob
-      })
-      .then((response)=> {
-        console.log("Picture added", response);
-      })
-      .catch((error)=> {
-        console.log(error);
-      })
-    }
-
     deletePost = async(post_id) => {
       const id = await AsyncStorage.getItem('@session_id');
       const session_token = await AsyncStorage.getItem('@session_token');
@@ -218,22 +180,20 @@ class ProfilePage extends Component {
                 </TouchableOpacity>  
                
 
-                <Camera
+                {/* <Camera
                 style={styles.camera}
                 type={this.state.type}
                 ref ={ref => this.camera =ref}
-                >
+                > */}
                   <View style = {styles.buttonContainer}>
                   <TouchableOpacity
                   style = {styles.button}
-                  onPress= {() =>{
-                    this.takePicture();
-                  }}>
+                 >
                   
-                  <Text style={styles.text}> camera</Text>
+                  <Text onPress={()=>this.props.navigation.navigate('CameraPage')} style={styles.text}> camera</Text>
                   </TouchableOpacity>
                   </View>
-                </Camera>
+                {/* </Camera> */}
 
                 {/* <Image
                 source ={{
@@ -270,11 +230,6 @@ class ProfilePage extends Component {
                 )}
                 keyExtractor={(item,index) => item.post_id.toString()}
               />
-
-              {/* <TouchableOpacity>
-                    <Text onPress={() => this.props.navigation.navigate('LogOutPage')} style={styles.post} > Log Out </Text>
-                   
-              </TouchableOpacity>   */}
 
 
 
