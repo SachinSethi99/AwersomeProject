@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { Text, TextInput, View, Button, StyleSheet, Alert, TouchableOpacity } from 'react-native';
+import { Image, Text, TextInput, View, Button, StyleSheet, Alert, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { FlatList } from 'react-native-web';
 import { Camera } from 'expo-camera';
+
 
 class ProfilePage extends Component {
   constructor(props){
@@ -24,9 +25,10 @@ class ProfilePage extends Component {
   componentDidMount() {
     this.unsubscribe = this.props.navigation.addListener('focus', () => {
       this.checkLoggedIn();
+      this.getData();
+      this.get_profile_image();
     });    
-    this.getData();
-    this.get_profile_image();
+
   }
     
   componentWillUnmount() {
@@ -116,6 +118,7 @@ class ProfilePage extends Component {
         this.setState({
           photo: data,
           isLoading: false
+        
         });
       })
       .catch((err) => {
@@ -198,21 +201,22 @@ class ProfilePage extends Component {
                 <View style={styles.background}>
                 <Text style= {styles.title}> SPACEBOOK </Text>
                 <Text style={styles.profileTitle} > Profile Page </Text>
-                {/* <Text style={styles.profileTitle2}> Add Your Post: </Text> */}
+                
+                
+                <Image
+                  source={{
+                  uri: this.state.photo,
+                  }}
+                  style={{
+                  borderRadius: 50,
+                  width: 100,
+                  height: 100,
+                  marginLeft:5,
+                  borderWidth: 3 
+                  }}
+                />
 
-
-
-
-                {/* <Image
-            source={{
-              uri: this.state.photo,
-            }}
-            style={{
-              width: 400,
-              height: 400,
-              borderWidth: 5 
-            }}
-          /> */}
+                <Text style={styles.profileTitle2}> Add Your Post: </Text> 
                 <TextInput placeholder = 'Enter Your Post:' 
                 style={{fontSize: 25, backgroundColor: '#ffffff',textAlign:'center',
                   marginLeft: 10,marginRight:10, marginTop: 10,marginBottom:10, borderWidth: 2}}

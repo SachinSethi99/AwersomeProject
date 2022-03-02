@@ -93,8 +93,19 @@ class requestfriends extends Component {
                     if(response.status === 200){
                         console.log("Follow Completed")
                     }else if(response.status === 401){
-                        console.log("Follow Not Sent")
-                      }else{
+                        console.log("Unauthorised")
+                      }else if(response.status === 403){
+                        console.log("User Already added")
+                      }else if(response.status === 404){
+                        console.log("Not Found")
+                      }else if(response.status === 500){
+                        console.log("Server failed")
+                      }
+                      
+                      
+                      
+                      
+                      else{
                           throw 'Something went wrong';
                       }
                     }

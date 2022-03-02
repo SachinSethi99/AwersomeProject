@@ -1,5 +1,10 @@
+/* eslint-disable react/jsx-filename-extension */
+/* eslint-disable no-return-assign */
+/* eslint-disable class-methods-use-this */
+/* eslint-disable no-console */
 /* eslint-disable linebreak-style */
 import React, { Component } from 'react';
+// eslint-disable-next-line object-curly-newline
 import { StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import { Camera } from 'expo-camera';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -57,6 +62,7 @@ class CameraPage extends Component {
   };
 
   render() {
+    // eslint-disable-next-line react/destructuring-assignment
     if (this.state.hasPermission) {
       return (
         <Camera
