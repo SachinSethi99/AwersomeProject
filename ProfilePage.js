@@ -17,6 +17,7 @@ class ProfilePage extends Component {
               post_id2 : '',
               post_id: '',
               isAuthenticated: true,
+              photo: null
             }
     }
 
@@ -25,6 +26,7 @@ class ProfilePage extends Component {
           this.checkLoggedIn();
         });    
         this.getData();
+        this.get_profile_image();
       }
     
       componentWillUnmount() {
@@ -96,6 +98,35 @@ class ProfilePage extends Component {
         });
       }
     }
+
+    get_profile_image = async() => {
+      const id = await AsyncStorage.getItem('@session_id');
+      const token = await AsyncStorage.getItem('@session_token');
+      fetch("http://localhost:3333/api/1.0.0/user/"+id+"/photo", {
+        method: 'GET',
+        headers: {
+          'X-Authorization': token
+        }
+      })
+      .then((res) => {
+        return res.blob();
+      })
+      .then((resBlob) => {
+        let data = URL.createObjectURL(resBlob);
+        this.setState({
+          photo: data,
+          isLoading: false
+        });
+      })
+      .catch((err) => {
+        console.log("error", err)
+      });
+    }
+  
+    // componentDidMount(){
+    //   this.get_profile_image();
+    // }
+  
 
     updatePost = async(post_id) => {
       const id = await AsyncStorage.getItem('@session_id');
@@ -169,6 +200,19 @@ class ProfilePage extends Component {
                 <Text style={styles.profileTitle} > Profile Page </Text>
                 {/* <Text style={styles.profileTitle2}> Add Your Post: </Text> */}
 
+
+
+
+                {/* <Image
+            source={{
+              uri: this.state.photo,
+            }}
+            style={{
+              width: 400,
+              height: 400,
+              borderWidth: 5 
+            }}
+          /> */}
                 <TextInput placeholder = 'Enter Your Post:' 
                 style={{fontSize: 25, backgroundColor: '#ffffff',textAlign:'center',
                 marginLeft: 10,marginRight:10, marginTop: 10,marginBottom:10, borderWidth: 2}}
@@ -179,30 +223,6 @@ class ProfilePage extends Component {
                     <Text onPress={() => this.newPost()} style={styles.post} > Add New Post </Text>
                 </TouchableOpacity>  
                
-
-                {/* <Camera
-                style={styles.camera}
-                type={this.state.type}
-                ref ={ref => this.camera =ref}
-                > */}
-                  <View style = {styles.buttonContainer}>
-                  <TouchableOpacity
-                  style = {styles.button}
-                 >
-                  
-                  <Text onPress={()=>this.props.navigation.navigate('CameraPage')} style={styles.text}> camera</Text>
-                  </TouchableOpacity>
-                  </View>
-                {/* </Camera> */}
-
-                {/* <Image
-                source ={{
-                  //uri:path_to_image,
-                 // headers:{"X-Authorization":token}
-                }}
-                /> */}
-
-
 
       
                 <FlatList

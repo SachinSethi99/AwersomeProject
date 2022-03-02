@@ -72,6 +72,15 @@ class editProfileDetails extends Component {
           
               <View style={styles.background}>
               <Text style= {styles.title}> SPACEBOOK </Text>
+
+              <View style = {styles.buttonContainer}>
+              <TouchableOpacity
+              style = {styles.button}
+             >
+              
+              <Text onPress={()=>this.props.navigation.navigate('CameraPage')} style={styles.text}> Upload/Change Profile Picture</Text>
+              </TouchableOpacity>
+              </View>
              
               <Text style= {styles.details}>Update Details </Text>
               <TextInput
