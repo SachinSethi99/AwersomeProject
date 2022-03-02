@@ -6,75 +6,75 @@ import { FlatList } from 'react-native-web';
 import { Camera } from 'expo-camera';
 
 class ProfilePage extends Component {
-    constructor(props){
-            super(props);
-            this.state = {
-              isLoading: true,
-              postData : [],
-              id : '',
-              text : '',
-              post : '',
-              post_id2 : '',
-              post_id: '',
-              isAuthenticated: true,
-              photo: null
-            }
-    }
+  constructor(props){
+    super(props);
+    this.state = {
+      isLoading: true,
+      postData : [],
+      id : '',
+      text : '',
+      post : '',
+      post_id2 : '',
+      post_id: '',
+      isAuthenticated: true,
+      photo: null
+    };
+  }
 
-    componentDidMount() {
-        this.unsubscribe = this.props.navigation.addListener('focus', () => {
-          this.checkLoggedIn();
-        });    
-        this.getData();
-        this.get_profile_image();
+  componentDidMount() {
+    this.unsubscribe = this.props.navigation.addListener('focus', () => {
+      this.checkLoggedIn();
+    });    
+    this.getData();
+    this.get_profile_image();
+  }
+    
+  componentWillUnmount() {
+    this.unsubscribe();
+  }
+    
+  getData = async () => {
+    const id = await AsyncStorage.getItem('@session_id');
+    const value = await AsyncStorage.getItem('@session_token');
+    // const post_id = await AsyncStorage.setItem('@session_post_id');
+    return fetch("http://localhost:3333/api/1.0.0/user/"+id+"/post" , {
+      'headers': {
+        'X-Authorization':  value
       }
+    })
     
-      componentWillUnmount() {
-        this.unsubscribe();
-      }
-    
-      getData = async () => {
-        const id = await AsyncStorage.getItem('@session_id');
-        const value = await AsyncStorage.getItem('@session_token');
-       // const post_id = await AsyncStorage.setItem('@session_post_id');
-        return fetch("http://localhost:3333/api/1.0.0/user/"+id+"/post" , {
-              'headers': {
-                'X-Authorization':  value
-              }
-            })
-    
-            .then((response) => {
-                if(response.status === 200){
-                    return response.json()
-                }else if(response.status === 401){
-                  this.props.navigation.navigate("LogIn");
-                }else{
-                    throw 'Something went wrong';
-                }
-            })
-            .then((responseJson) => {
-                this.setState({
-                  isLoading: false,
-                  postData: responseJson
-                })
-              })
+      .then((response) => {
+        if(response.status === 200){
+          return response.json();
+        }else if(response.status === 401){
+          this.props.navigation.navigate("LogIn");
+        }else{
+          throw 'Something went wrong';
+        }
+      })
+      .then((responseJson) => {
+        this.setState({
+          isLoading: false,
+          postData: responseJson
+        });
+      })
       
-              .catch((error) => {
-                  console.log(error);
-              })
-        }
+      .catch((error) => {
+        console.log(error);
+      });
+  };
     
-      checkLoggedIn = async () => {
-        const value = await AsyncStorage.getItem('@session_token');
-        if (value == null) {
-            this.props.navigation.navigate('LoginPage');
-        }
-      };
+  checkLoggedIn = async () => {
+    const value = await AsyncStorage.getItem('@session_token');
+    if (value == null) {
+      this.props.navigation.navigate('LoginPage');
+    }
+  };
 
-    //send message to server if already authenticated, wait on a promise before doing anything else
-    newPost = async () => {
+  //send message to server if already authenticated, wait on a promise before doing anything else
+  newPost = async () => {
     if (!this.state.isAuthenticated) {
-      console.log("Error not authenticated")
+      console.log("Error not authenticated");
     }
     else {
       const id = await AsyncStorage.getItem('@session_id');
@@ -89,25 +89,25 @@ class ProfilePage extends Component {
         }
       
       }).then(resp => {
-        console.log("Chat publised")
+        console.log("Chat publised");
         this.getData();
       })
         .catch(error => {
           console.log(error);
-          alert("Post couldn't be sent to the server successfully")
+          alert("Post couldn't be sent to the server successfully");
         });
-      }
     }
+  };
 
-    get_profile_image = async() => {
-      const id = await AsyncStorage.getItem('@session_id');
-      const token = await AsyncStorage.getItem('@session_token');
-      fetch("http://localhost:3333/api/1.0.0/user/"+id+"/photo", {
-        method: 'GET',
-        headers: {
-          'X-Authorization': token
-        }
-      })
+  get_profile_image = async() => {
+    const id = await AsyncStorage.getItem('@session_id');
+    const token = await AsyncStorage.getItem('@session_token');
+    fetch("http://localhost:3333/api/1.0.0/user/"+id+"/photo", {
+      method: 'GET',
+      headers: {
+        'X-Authorization': token
+      }
+    })
       .then((res) => {
         return res.blob();
       })
@@ -119,29 +119,29 @@ class ProfilePage extends Component {
         });
       })
       .catch((err) => {
-        console.log("error", err)
+        console.log("error", err);
       });
-    }
+  };
   
-    // componentDidMount(){
-    //   this.get_profile_image();
-    // }
+  // componentDidMount(){
+  //   this.get_profile_image();
+  // }
   
 
-    updatePost = async(post_id) => {
-      const id = await AsyncStorage.getItem('@session_id');
-      const session_token = await AsyncStorage.getItem('@session_token');
-      // const post_id = await AsyncStorage.getItem(post_id);
-      return fetch('http://localhost:3333/api/1.0.0/user/'+id+'/post/' + post_id, {
+  updatePost = async(post_id) => {
+    const id = await AsyncStorage.getItem('@session_id');
+    const session_token = await AsyncStorage.getItem('@session_token');
+    // const post_id = await AsyncStorage.getItem(post_id);
+    return fetch('http://localhost:3333/api/1.0.0/user/'+id+'/post/' + post_id, {
       
-       headers: {
-          'Content-Type': 'application/json',
-          'X-Authorization': session_token,
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Authorization': session_token,
           
-        },
-         method: 'PATCH',
-         body: JSON.stringify({  "text":this.state.post_id2})
-      })
+      },
+      method: 'PATCH',
+      body: JSON.stringify({  "text":this.state.post_id2})
+    })
 
 
       .then((response) => {
@@ -151,25 +151,25 @@ class ProfilePage extends Component {
         }else if(response.status === 401){
           console.log("Post failed");
         }else{
-            throw 'Something went wrong';
+          throw 'Something went wrong';
         }
-    }).catch((error) => {
+      }).catch((error) => {
         console.log(error);
-      })
-    }
+      });
+  };
 
-    deletePost = async(post_id) => {
-      const id = await AsyncStorage.getItem('@session_id');
-      const session_token = await AsyncStorage.getItem('@session_token');
-      // const post_id = await AsyncStorage.getItem(post_id);
-      return fetch('http://localhost:3333/api/1.0.0/user/'+id+'/post/' + post_id, {
-       method: 'delete',
-       headers: {
-          'Content-Type': 'application/json',
-          'X-Authorization': session_token
-        }
+  deletePost = async(post_id) => {
+    const id = await AsyncStorage.getItem('@session_id');
+    const session_token = await AsyncStorage.getItem('@session_token');
+    // const post_id = await AsyncStorage.getItem(post_id);
+    return fetch('http://localhost:3333/api/1.0.0/user/'+id+'/post/' + post_id, {
+      method: 'delete',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Authorization': session_token
+      }
         
-      })
+    })
       
 
       .then((response) => {
@@ -178,12 +178,12 @@ class ProfilePage extends Component {
       })
       .catch((error) => {
         console.log(error);
-      })
-    }
+      });
+  };
     
-      render() {
-        if (this.state.isLoading){
-            return (
+  render() {
+    if (this.state.isLoading){
+      return (
               <View 
                 style={{
                   flex: 1,
@@ -192,9 +192,9 @@ class ProfilePage extends Component {
                   alignItems: 'center',
                 }}>
               </View>
-            );
-          }else{
-            return (
+      );
+    }else{
+      return (
                 <View style={styles.background}>
                 <Text style= {styles.title}> SPACEBOOK </Text>
                 <Text style={styles.profileTitle} > Profile Page </Text>
@@ -215,7 +215,7 @@ class ProfilePage extends Component {
           /> */}
                 <TextInput placeholder = 'Enter Your Post:' 
                 style={{fontSize: 25, backgroundColor: '#ffffff',textAlign:'center',
-                marginLeft: 10,marginRight:10, marginTop: 10,marginBottom:10, borderWidth: 2}}
+                  marginLeft: 10,marginRight:10, marginTop: 10,marginBottom:10, borderWidth: 2}}
                 onChangeText={value => this.setState({post: value})}
                 value={this.state.post}/>
       
@@ -241,7 +241,7 @@ class ProfilePage extends Component {
 
                     <TextInput placeholder = 'Update Your Post:' 
                       style={{fontSize: 25, backgroundColor: '#ffffff',textAlign:'center',
-                      marginLeft: 10,marginRight:10, marginTop: 10,marginBottom:10, borderWidth: 2}}
+                        marginLeft: 10,marginRight:10, marginTop: 10,marginBottom:10, borderWidth: 2}}
                       onChangeText={value => this.setState({post_id2: value})}
                       value={this.state.post_id2}
                     />
@@ -256,71 +256,71 @@ class ProfilePage extends Component {
         
 
               </View>
-            );
-           }
-        }
+      );
     }
+  }
+}
       
-      const styles = StyleSheet.create({
-        title:{
-          fontSize:65,
-          fontfamily:"lucida grande",
-          color: "#fffcfa"
-      },
-        background : {
-            backgroundColor: '#4267B2',
-            flex : 1,
-        },
-        profileTitle:{
-          fontSize:35,
-          fontfamily:"lucida grande",
-          color: "#fffcfa",
-          marginLeft: 90
-        },
+const styles = StyleSheet.create({
+  title:{
+    fontSize:65,
+    fontfamily:"lucida grande",
+    color: "#fffcfa"
+  },
+  background : {
+    backgroundColor: '#4267B2',
+    flex : 1,
+  },
+  profileTitle:{
+    fontSize:35,
+    fontfamily:"lucida grande",
+    color: "#fffcfa",
+    marginLeft: 90
+  },
 
-        listDisplay:{
-          color:"red"
+  listDisplay:{
+    color:"red"
 
-        },
-        profileTitle2:{
-          fontSize:20,
-          fontfamily:"lucida grande",
-          color: "#fffcfa",
-          marginLeft: 10
+  },
+  profileTitle2:{
+    fontSize:20,
+    fontfamily:"lucida grande",
+    color: "#fffcfa",
+    marginLeft: 10
 
 
-        },
-          post : {      
-            fontSize:20,
-            fontfamily:"lucida grande",
-            color: "#fffcfa",
-            marginTop:-5,
-            marginLeft:120
-            },
-            friends : {      
-              fontSize:20,
-              fontfamily:"lucida grande",
-              color: "#fffcfa",
-              marginTop:0,
-              marginLeft:75
-              },
-          delpost : {      
-              fontSize:18,
-              fontfamily:"lucida grande",
-              color: "#fffcfa",
-              marginTop:-20,
-              marginLeft:260,
-              },
-              upDatePost: {
-                fontSize:18,
-                fontfamily:"lucida grande",
-                color: "#fffcfa",
-                marginTop:0,
-                marginLeft:255,
+  },
+  post : {      
+    fontSize:20,
+    fontfamily:"lucida grande",
+    color: "#fffcfa",
+    marginTop:-5,
+    marginLeft:120
+  },
+  friends : {      
+    fontSize:20,
+    fontfamily:"lucida grande",
+    color: "#fffcfa",
+    marginTop:0,
+    marginLeft:75
+  },
+  delpost : {      
+    fontSize:18,
+    fontfamily:"lucida grande",
+    color: "#fffcfa",
+    marginTop:-20,
+    marginLeft:260,
+  },
+  upDatePost: {
+    fontSize:18,
+    fontfamily:"lucida grande",
+    color: "#fffcfa",
+    marginTop:0,
+    marginLeft:255,
 
-              }
+  }
 
-      });
+});
 
-export default ProfilePage
+export default ProfilePage;
 
