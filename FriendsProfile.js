@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 /* eslint-disable react/no-unused-state */
 import React, { Component } from 'react';
 import {
@@ -26,15 +27,14 @@ class FriendProfileWall extends Component {
       token: '',
       text:'',
       query: '',
-      postData: []
+      postData: [],
+      post_id:''
     };
   }
 
   // get users list of post
   getData = async () => {
-
     let { user_id} = this.props.route.params;
-
     const token = await AsyncStorage.getItem('@session_token');
     //const id = await AsyncStorage.getItem('@session_id');
 
@@ -94,11 +94,12 @@ class FriendProfileWall extends Component {
   // update
 
   // like post
-  addLike = async () => {
-    const id = await AsyncStorage.getItem('@session_id');
+  addLike = async (post_id) => {
+    let { user_id} = this.props.route.params;
+   // let { post_id} = this.props.route.params;
     const session_token = await AsyncStorage.getItem('@session_token');
     // const post_id = await AsyncStorage.getItem(post_id);
-    return fetch("http://localhost:3333/api/1.0.0/user/"+user_id+"/post/${post_id}/like", {
+    return fetch("http://localhost:3333/api/1.0.0/user/" + user_id + "/post/" + post_id + "/like", {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -107,7 +108,7 @@ class FriendProfileWall extends Component {
     })
       .then((response) => {
         this.getData();
-        console.log('like deleted');
+        console.log('like done');
       })
       .catch((error) => {
         console.log(error);
@@ -115,10 +116,11 @@ class FriendProfileWall extends Component {
   };
 
   // remove like
-  removeLike = async () => {
-    const id = await AsyncStorage.getItem('@session_id');
+  removeLike = async (post_id) => {
+    let { user_id} = this.props.route.params;
     const session_token = await AsyncStorage.getItem('@session_token');
     // const post_id = await AsyncStorage.getItem(post_id);
+   // let {post_id} =this.props.route.params;
     return fetch("http://localhost:3333/api/1.0.0/user/"+user_id+"/post/"+post_id+"/like", {
       method: 'DELETE',
       headers: {
@@ -146,6 +148,16 @@ class FriendProfileWall extends Component {
             renderItem={({item}) => (
                 <View>
                     <Text>{item.text}</Text>
+                    <TouchableOpacity>
+                        <Text onPress={() => this.addLike(item.post_id)}>  Like    </Text>
+
+                    </TouchableOpacity>
+
+
+                    <TouchableOpacity>
+
+                        <Text onPress={() => this.removeLike(item.post_id) }> Remove Like</Text>
+                    </TouchableOpacity>
                 </View>
             )}
         />
