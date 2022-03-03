@@ -5,7 +5,6 @@ import axios from 'axios';
 import { FlatList } from 'react-native-web';
 import { Camera } from 'expo-camera';
 
-
 class ProfilePage extends Component {
   constructor(props){
     super(props);
@@ -18,7 +17,7 @@ class ProfilePage extends Component {
       post_id2 : '',
       post_id: '',
       isAuthenticated: true,
-      photo: null
+      photo: null,
     };
   }
 
@@ -41,8 +40,8 @@ class ProfilePage extends Component {
     // const post_id = await AsyncStorage.setItem('@session_post_id');
     return fetch("http://localhost:3333/api/1.0.0/user/"+id+"/post" , {
       'headers': {
-        'X-Authorization':  value
-      }
+        'X-Authorization':  value,
+      },
     })
     
       .then((response) => {
@@ -57,7 +56,7 @@ class ProfilePage extends Component {
       .then((responseJson) => {
         this.setState({
           isLoading: false,
-          postData: responseJson
+          postData: responseJson,
         });
       })
       
@@ -83,12 +82,12 @@ class ProfilePage extends Component {
       const session_token = await AsyncStorage.getItem('@session_token');
       const post_id = await AsyncStorage.setItem(post_id);
       axios.post('http://localhost:3333/api/1.0.0/user/'+id+"/post", {
-        "text":this.state.post          
+        "text":this.state.post,          
       }, {
         headers: {
           'Content-Type': 'application/json',
-          'X-Authorization': session_token
-        }
+          'X-Authorization': session_token,
+        },
       
       }).then(resp => {
         console.log("Chat publised");
@@ -107,8 +106,8 @@ class ProfilePage extends Component {
     fetch("http://localhost:3333/api/1.0.0/user/"+id+"/photo", {
       method: 'GET',
       headers: {
-        'X-Authorization': token
-      }
+        'X-Authorization': token,
+      },
     })
       .then((res) => {
         return res.blob();
@@ -117,7 +116,7 @@ class ProfilePage extends Component {
         let data = URL.createObjectURL(resBlob);
         this.setState({
           photo: data,
-          isLoading: false
+          isLoading: false,
         
         });
       })
@@ -129,7 +128,6 @@ class ProfilePage extends Component {
   // componentDidMount(){
   //   this.get_profile_image();
   // }
-  
 
   updatePost = async(post_id) => {
     const id = await AsyncStorage.getItem('@session_id');
@@ -143,9 +141,8 @@ class ProfilePage extends Component {
           
       },
       method: 'PATCH',
-      body: JSON.stringify({  "text":this.state.post_id2})
+      body: JSON.stringify({  "text":this.state.post_id2}),
     })
-
 
       .then((response) => {
         if(response.status === 200){
@@ -169,11 +166,10 @@ class ProfilePage extends Component {
       method: 'delete',
       headers: {
         'Content-Type': 'application/json',
-        'X-Authorization': session_token
-      }
+        'X-Authorization': session_token,
+      },
         
     })
-      
 
       .then((response) => {
         this.getData();
@@ -202,7 +198,6 @@ class ProfilePage extends Component {
                 <Text style= {styles.title}> SPACEBOOK </Text>
                 <Text style={styles.profileTitle} > Profile Page </Text>
                 
-                
                 <Image
                   source={{
                   uri: this.state.photo,
@@ -212,7 +207,7 @@ class ProfilePage extends Component {
                   width: 100,
                   height: 100,
                   marginLeft:5,
-                  borderWidth: 3 
+                  borderWidth: 3, 
                   }}
                 />
 
@@ -226,8 +221,6 @@ class ProfilePage extends Component {
                 <TouchableOpacity>
                     <Text onPress={() => this.newPost()} style={styles.post} > Add New Post </Text>
                 </TouchableOpacity>  
-               
-
       
                 <FlatList
                 data={this.state.postData}
@@ -255,10 +248,6 @@ class ProfilePage extends Component {
                 keyExtractor={(item,index) => item.post_id.toString()}
               />
 
-
-
-        
-
               </View>
       );
     }
@@ -269,7 +258,7 @@ const styles = StyleSheet.create({
   title:{
     fontSize:65,
     fontfamily:"lucida grande",
-    color: "#fffcfa"
+    color: "#fffcfa",
   },
   background : {
     backgroundColor: '#4267B2',
@@ -279,19 +268,18 @@ const styles = StyleSheet.create({
     fontSize:35,
     fontfamily:"lucida grande",
     color: "#fffcfa",
-    marginLeft: 90
+    marginLeft: 90,
   },
 
   listDisplay:{
-    color:"red"
+    color:"red",
 
   },
   profileTitle2:{
     fontSize:20,
     fontfamily:"lucida grande",
     color: "#fffcfa",
-    marginLeft: 10
-
+    marginLeft: 10,
 
   },
   post : {      
@@ -299,14 +287,14 @@ const styles = StyleSheet.create({
     fontfamily:"lucida grande",
     color: "#fffcfa",
     marginTop:-5,
-    marginLeft:120
+    marginLeft:120,
   },
   friends : {      
     fontSize:20,
     fontfamily:"lucida grande",
     color: "#fffcfa",
     marginTop:0,
-    marginLeft:75
+    marginLeft:75,
   },
   delpost : {      
     fontSize:18,
@@ -322,9 +310,8 @@ const styles = StyleSheet.create({
     marginTop:0,
     marginLeft:255,
 
-  }
+  },
 
 });
 
 export default ProfilePage;
-
