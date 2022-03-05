@@ -1,8 +1,9 @@
+/* eslint-disable linebreak-style */
 /* eslint-disable camelcase */
 /* eslint-disable react/no-unused-state */
 import React, { Component } from 'react';
 import {
-  Text, View, Button, StyleSheet, TouchableOpacity, TextInput,
+  Text, View, Button,Image, StyleSheet, TouchableOpacity, TextInput,
 } from 'react-native';
 import axios from 'axios';
 import { FlatList } from 'react-native-gesture-handler';
@@ -30,7 +31,9 @@ class FriendProfileWall extends Component {
       query: '',
       postData: [],
       post_id:'',
-      post_id2:''
+      post_id2:'',
+      photo:null,
+      text2:''
     };
   }
 
@@ -70,6 +73,7 @@ class FriendProfileWall extends Component {
   componentDidMount() {
     this.unsubscribe = this.props.navigation.addListener('focus', () => {
       this.checkLoggedIn();
+      this.get_Friend_profile_image();
     });
     this.getData();
   }
@@ -89,14 +93,43 @@ class FriendProfileWall extends Component {
   // get list of posts for give user
   
 
+  get_Friend_profile_image = async() => {
+    let {user_id} = this.props.route.params;
+    const id = await AsyncStorage.getItem('@session_id');
+    const token = await AsyncStorage.getItem('@session_token');
+    fetch("http://localhost:3333/api/1.0.0/user/"+user_id+"/photo", {
+      method: 'GET',
+      headers: {
+        'X-Authorization': token,
+      },
+    })
+      .then((res) => {
+        return res.blob();
+      })
+      .then((resBlob) => {
+        let data = URL.createObjectURL(resBlob);
+        this.setState({
+          photo: data,
+          isLoading: false,
+        
+        });
+      })
+      .catch((err) => {
+        console.log("error", err);
+      });
+  };
+
+
   // add post
   newPostFriends = async () => {
-    let { user_id} = this.props.route.params;
-      //const id = await AsyncStorage.getItem('@session_id');
+      let { user_id} = this.props.route.params;
+      const id = await AsyncStorage.getItem('@session_id');
       const session_token = await AsyncStorage.getItem('@session_token');
       const post_id = await AsyncStorage.setItem(post_id);
+
+   
       axios.post('http://localhost:3333/api/1.0.0/user/'+user_id+"/post", {
-        "text":this.state.post,          
+        "text2":this.state.post,          
       }, {
         headers: {
           'Content-Type': 'application/json',
@@ -111,6 +144,7 @@ class FriendProfileWall extends Component {
           console.log(error);
           alert("Post couldn't be sent to the server successfully");
         });
+      
     
   };
 
@@ -138,9 +172,6 @@ class FriendProfileWall extends Component {
         console.log(error);
       });
   };
-
-
-
 
   // update
   updatePostFriend = async(post_id) => {
@@ -172,14 +203,6 @@ class FriendProfileWall extends Component {
         console.log(error);
       });
   };
-
-
-
-
-
-
-
-
 
   // like post
   addLike = async (post_id) => {
@@ -232,6 +255,21 @@ class FriendProfileWall extends Component {
         <Text style={styles.title}> SPACEBOOK </Text>
         <Text style={styles.profileTitle}>Friends Profile</Text>
 
+
+
+        <Image
+                  source={{
+                  uri: this.state.photo,
+                  }}
+                  style={{
+                  borderRadius: 50,
+                  width: 100,
+                  height: 100,
+                  marginLeft:5,
+                  borderWidth: 3, 
+                  }}
+                />
+
        <Text > Add Your Post: </Text> 
                 <TextInput placeholder = 'Enter Your Post On Friend Wall:' 
                 style={{fontSize: 25, backgroundColor: '#ffffff',textAlign:'center',
@@ -245,15 +283,47 @@ class FriendProfileWall extends Component {
 
 
 
+
         <FlatList
             data={this.state.postData}
-            renderItem={({item}) => (
+          
+      
+            renderItem={({item}) => {
+             if(this.state.user_id != this.state.userid1){
+               return(
                 <View>
-       
-                <TouchableOpacity>
-                        <Text onPress={() => this.updatePostFriend(item.post_id)} style={styles.upDatePost} > Update Post </Text>
-                    </TouchableOpacity> 
+                
+                <TextInput placeholder = 'Update Your Post:' 
+                style={{fontSize: 25, backgroundColor: '#ffffff',textAlign:'center',
+                  marginLeft: 10,marginRight:10, marginTop: 10,marginBottom:10, borderWidth: 2}}
+                onChangeText={value => this.setState({post_id2: value})}
+                value={this.state.post_id2}
+                />
 
+                <Text >User : {item.text2}   </Text>       
+
+              
+              <TouchableOpacity>
+                  <Text onPress={() => this.updatePostFriend(item.post_id)} style={styles.upDatePost} > Update Post </Text>
+              </TouchableOpacity>
+                
+              <TouchableOpacity>
+                  <Text onPress={() => this.deletePostFriends(item.post_id)} style={styles.delpost} > Delete Post </Text>
+              </TouchableOpacity>  
+
+              </View>
+
+
+
+               );
+
+             }else {
+               return(
+              
+                <View> 
+
+           {/* ****************************************************************************************************** */}
+{/*  
                     <TextInput placeholder = 'Update Your Post:' 
                       style={{fontSize: 25, backgroundColor: '#ffffff',textAlign:'center',
                         marginLeft: 10,marginRight:10, marginTop: 10,marginBottom:10, borderWidth: 2}}
@@ -261,25 +331,33 @@ class FriendProfileWall extends Component {
                       value={this.state.post_id2}
                       />
 
+                    
+                    <TouchableOpacity>
+                        <Text onPress={() => this.updatePostFriend(item.post_id)} style={styles.upDatePost} > Update Post </Text>
+                    </TouchableOpacity>
                       
                     <TouchableOpacity>
                         <Text onPress={() => this.deletePostFriends(item.post_id)} style={styles.delpost} > Delete Post </Text>
-                    </TouchableOpacity>  
-
-
+                    </TouchableOpacity>   */}
+  
+      {/* ****************************************************************************************************** */}
                     <Text>{item.text}</Text>
                     <TouchableOpacity>
                         <Text onPress={() => this.addLike(item.post_id)}>  Like    </Text>
 
                     </TouchableOpacity>
 
-
                     <TouchableOpacity>
 
                         <Text onPress={() => this.removeLike(item.post_id) }> Remove Like</Text>
                     </TouchableOpacity>
                 </View>
-            )}
+               );
+
+
+                  }
+                }}
+
         />
 
 
@@ -328,8 +406,8 @@ const styles = StyleSheet.create({
     fontSize:18,
     fontfamily:"lucida grande",
     color: "#fffcfa",
-    marginTop:-20,
-    marginLeft:260,
+    marginTop:0,
+    marginLeft:255,
   },
 
 });
