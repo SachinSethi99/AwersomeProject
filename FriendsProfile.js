@@ -7,11 +7,12 @@
 /* eslint-disable react/no-unused-state */
 import React, { Component } from 'react';
 import {
-  Text, View, Button,Image, StyleSheet, TouchableOpacity, TextInput,
+  Text, View, Button,Image, StyleSheet, TouchableOpacity, TextInput,FlatList
 } from 'react-native';
-import axios from 'axios';
-import { FlatList } from 'react-native-gesture-handler';
+
+
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
 
 class FriendProfileWall extends Component {
   constructor(props) {
@@ -38,7 +39,9 @@ class FriendProfileWall extends Component {
       post_id2:'',
       photo:null,
       text2:'',
-      id: AsyncStorage.getItem('@session_id'),
+      id: '',
+
+      test1:'',
       
     };
   }
@@ -47,7 +50,7 @@ class FriendProfileWall extends Component {
   getData = async () => {
     let { user_id} = this.props.route.params;
     const token = await AsyncStorage.getItem('@session_token');
-    //const id = await AsyncStorage.getItem('@session_id');
+    const id = await AsyncStorage.getItem('@session_id');
 
     return fetch("http://localhost:3333/api/1.0.0/user/"+user_id+"/post", {
       headers: {
@@ -69,7 +72,9 @@ class FriendProfileWall extends Component {
         this.setState({
           isLoading: false,
           postData: responseJson,
+          id:id
         });
+        console.log(this.state.postData)
       })
       .catch((error) => {
         console.log(error);
@@ -95,15 +100,11 @@ class FriendProfileWall extends Component {
     }
   };
 
-  // get users profile pic
-  // get list of posts for give user
-  
-
   get_Friend_profile_image = async() => {
     let {user_id} = this.props.route.params;
     const id = await AsyncStorage.getItem('@session_id');
     const token = await AsyncStorage.getItem('@session_token');
-    fetch("http://localhost:3333/api/1.0.0/user/"+user_id+"/photo", {
+    return fetch("http://localhost:3333/api/1.0.0/user/"+user_id+"/photo", {
       method: 'GET',
       headers: {
         'X-Authorization': token,
@@ -126,36 +127,32 @@ class FriendProfileWall extends Component {
   };
 
 
-  // add post
   newPostFriends = async () => {
-      let { user_id} = this.props.route.params;
-      const id = await AsyncStorage.getItem('@session_id');
-      const session_token = await AsyncStorage.getItem('@session_token');
-      const post_id = await AsyncStorage.setItem(post_id);
-
-   
-      axios.post('http://localhost:3333/api/1.0.0/user/'+user_id+"/post", {
-        "text":this.state.post,          
-      }, {
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Authorization': session_token,
-        },
-      
-      }).then(resp => {
-        console.log("Chat publised");
-        this.getData();
-      })
-        .catch(error => {
-          console.log(error);
-          alert("Post couldn't be sent to the server successfully");
-        });
-      
+    let { user_id} = this.props.route.params;
+    const id = await AsyncStorage.getItem('@session_id');
+    const session_token = await AsyncStorage.getItem('@session_token');
+    const post_id = await AsyncStorage.setItem(post_id);
+    axios.post('http://localhost:3333/api/1.0.0/user/'+user_id+"/post", {
+      "text":this.state.post,          
+    }, {
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Authorization': session_token,
+      },
     
-  };
+    }).then(resp => {
+      console.log("Chat publised");
+      this.getData();
+    })
+      .catch(error => {
+        console.log(error);
+        alert("Post couldn't be sent to the server successfully");
+      });
+    
+  
+};
 
   // delete
-  
   deletePostFriends = async(post_id) => {
     //const id = await AsyncStorage.getItem('@session_id');
     let { user_id} = this.props.route.params;
@@ -193,7 +190,7 @@ class FriendProfileWall extends Component {
           
       },
       method: 'PATCH',
-      body: JSON.stringify({  "text":this.state.post_id2}),
+      body: JSON.stringify({ "text":this.state.post_id2}),
     })
 
       .then((response) => {
@@ -254,34 +251,32 @@ class FriendProfileWall extends Component {
       });
   };
 
-displayPost= async(item)=>
-{
-  let id= await AsyncStorage.getItem('@session_id')
-  if(item.author.user_id == id){
-    console.log(item.author.user_id)
-    console.log(id)
+displayPost(item){
+
+  if(item.author.user_id==this.state.id){
     return(
       <View>
-      <TextInput placeholder = 'Update Your Post:' 
-        style={{fontSize: 25, backgroundColor: '#ffffff',textAlign:'center',
-          marginLeft: 10,marginRight:10, marginTop: 10,marginBottom:10, borderWidth: 2}}
-        onChangeText={value => this.setState({post_id2: value})}
-        value={this.state.post_id2}
-        />     
+        <TextInput placeholder = 'Update Your Post:' 
+          style={{fontSize: 25, backgroundColor: '#ffffff',textAlign:'center',
+            marginLeft: 10,marginRight:10, marginTop: 10,marginBottom:10, borderWidth: 2}}
+          onChangeText={value => this.setState({post_id2: value})}
+          value={this.state.post_id2}/>
 
-      <TouchableOpacity>
-          <Text onPress={() => this.updatePostFriend(item.post_id)} style={styles.upDatePost} > Update Post </Text>
-      </TouchableOpacity>
-        
-      <TouchableOpacity>
-          <Text onPress={() => this.deletePostFriends(item.post_id)} style={styles.delpost} > Delete Post </Text>
-      </TouchableOpacity>  
+        <TouchableOpacity>
+            <Text onPress={() => this.updatePostFriend(item.post_id)} style={styles.upDatePost} > Update Post </Text>
+        </TouchableOpacity>
+          
+        <TouchableOpacity>
+            <Text onPress={() => this.deletePostFriends(item.post_id)} style={styles.delpost} > Delete Post </Text>
+        </TouchableOpacity>  
 
-            <Text>{item.text}</Text>
+        <Text>{item.text}</Text>
         
       </View>
-    );
-     }
+      );
+  }
+    
+     
    else{
     return(
       <View>
@@ -295,17 +290,14 @@ displayPost= async(item)=>
               <Text onPress={() => this.removeLike(item.post_id) }> Remove Like</Text>
           </TouchableOpacity>
       </View>
-     );
-     
+     ); 
 
    }
-  
-
+   
 }
-
-
   render() {
     return (
+      
       <View style={styles.background}>
         <Text style={styles.title}> SPACEBOOK </Text>
         <Text style={styles.profileTitle}>Friends Profile</Text>
@@ -322,32 +314,23 @@ displayPost= async(item)=>
                   }}
                 />
 
-       <Text > Add Your Post: </Text> 
-                <TextInput placeholder = 'Enter Your Post On Friend Wall:' 
-                style={{fontSize: 25, backgroundColor: '#ffffff',textAlign:'center',
-                  marginLeft: 10,marginRight:10, marginTop: 10,marginBottom:10, borderWidth: 2}}
-                onChangeText={value => this.setState({post: value})}
-                value={this.state.post}/>
+        <Text > Add Your Post: </Text> 
+        <TextInput placeholder = 'Enter Your Post On Friend Wall:' 
+            style={{fontSize: 25, backgroundColor: '#ffffff',textAlign:'center',
+            marginLeft: 10,marginRight:10, marginTop: 10,marginBottom:10, borderWidth: 2}}
+            onChangeText={value => this.setState({post: value})}
+            value={this.state.post}/>
 
-            <TouchableOpacity>
-                    <Text onPress={() => this.newPostFriends()} style={styles.post} > Add New Post </Text>
-                </TouchableOpacity> 
+        <TouchableOpacity>
+          <Text onPress={() => this.newPostFriends()} style={styles.post} > Add New Post </Text>
+        </TouchableOpacity> 
 
-                <FlatList
-            data={this.state.postData}
-            keyExtractor={(item,index)=> item.post_id.toString()}
-            renderItem={({item}) => {
-               this.displayPost(item)
-             // console.log(item.author.user_id)
-              
-                  
-                }}
-                
+        <FlatList
+          data={this.state.postData}
+          renderItem={({item}) =>(this.displayPost(item))}
+          keyExtractor={(item,index)=> item.post_id.toString()}
+        />      
 
-        />
-
-
-        
       </View>
     );
   }
