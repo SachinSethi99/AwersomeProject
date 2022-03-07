@@ -1,6 +1,10 @@
 /* eslint-disable linebreak-style */
 /* eslint-disable camelcase */
 /* eslint-disable react/no-unused-state */
+/* eslint-disable */ 
+/* eslint-disable linebreak-style */
+/* eslint-disable camelcase */
+/* eslint-disable react/no-unused-state */
 import React, { Component } from 'react';
 import {
   Text, View, Button,Image, StyleSheet, TouchableOpacity, TextInput,
@@ -250,15 +254,61 @@ class FriendProfileWall extends Component {
       });
   };
 
+displayPost= async(item)=>
+{
+  let id= await AsyncStorage.getItem('@session_id')
+  if(item.author.user_id == id){
+    console.log(item.author.user_id)
+    console.log(id)
+    return(
+      <View>
+      <TextInput placeholder = 'Update Your Post:' 
+        style={{fontSize: 25, backgroundColor: '#ffffff',textAlign:'center',
+          marginLeft: 10,marginRight:10, marginTop: 10,marginBottom:10, borderWidth: 2}}
+        onChangeText={value => this.setState({post_id2: value})}
+        value={this.state.post_id2}
+        />     
+
+      <TouchableOpacity>
+          <Text onPress={() => this.updatePostFriend(item.post_id)} style={styles.upDatePost} > Update Post </Text>
+      </TouchableOpacity>
+        
+      <TouchableOpacity>
+          <Text onPress={() => this.deletePostFriends(item.post_id)} style={styles.delpost} > Delete Post </Text>
+      </TouchableOpacity>  
+
+            <Text>{item.text}</Text>
+        
+      </View>
+    );
+     }
+   else{
+    return(
+      <View>
+          <Text>{item.text}</Text>
+          <TouchableOpacity>
+              <Text onPress={() => this.addLike(item.post_id)}>  Like    </Text>
+
+          </TouchableOpacity>
+          <TouchableOpacity>
+
+              <Text onPress={() => this.removeLike(item.post_id) }> Remove Like</Text>
+          </TouchableOpacity>
+      </View>
+     );
+     
+
+   }
+  
+
+}
+
+
   render() {
     return (
-
       <View style={styles.background}>
         <Text style={styles.title}> SPACEBOOK </Text>
         <Text style={styles.profileTitle}>Friends Profile</Text>
-
-
-
         <Image
                   source={{
                   uri: this.state.photo,
@@ -285,42 +335,14 @@ class FriendProfileWall extends Component {
 
                 <FlatList
             data={this.state.postData}
+            keyExtractor={(item,index)=> item.post_id.toString()}
             renderItem={({item}) => {
-       
-               return(
-                <View>
-                
-                <TextInput placeholder = 'Update Your Post:' 
-                style={{fontSize: 25, backgroundColor: '#ffffff',textAlign:'center',
-                  marginLeft: 10,marginRight:10, marginTop: 10,marginBottom:10, borderWidth: 2}}
-                onChangeText={value => this.setState({post_id2: value})}
-                value={this.state.post_id2}
-                />     
-
-              <TouchableOpacity>
-                  <Text onPress={() => this.updatePostFriend(item.post_id)} style={styles.upDatePost} > Update Post </Text>
-              </TouchableOpacity>
-                
-              <TouchableOpacity>
-                  <Text onPress={() => this.deletePostFriends(item.post_id)} style={styles.delpost} > Delete Post </Text>
-              </TouchableOpacity>  
-
-                    <Text>{item.text}</Text>
-                    <TouchableOpacity>
-                        <Text onPress={() => this.addLike(item.post_id)}>  Like    </Text>
-
-                    </TouchableOpacity>
-
-                    <TouchableOpacity>
-
-                        <Text onPress={() => this.removeLike(item.post_id) }> Remove Like</Text>
-                    </TouchableOpacity>
-                </View>
-               );
-
-
+               this.displayPost(item)
+             // console.log(item.author.user_id)
+              
                   
                 }}
+                
 
         />
 
@@ -376,3 +398,6 @@ const styles = StyleSheet.create({
 
 });
 export default FriendProfileWall;
+
+
+

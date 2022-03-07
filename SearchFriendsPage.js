@@ -101,7 +101,7 @@ class FriendPages extends Component {
                 <Text style={{height:20, backgroundColor: '#fafa75', color: 'black' }}> User Name: {item.user_givenname} {item.user_familyname} </Text>
                 
                 <TouchableOpacity>
-                    <Text onPress={() => this.props.navigation.navigate('FriendsProfilePage', {user_id: item.user_id}, {post_id: item.post_id} )} > View Profile </Text>
+                    <Text onPress={() => this.props.navigation.navigate('FriendsProfilePage', {user_id: item.user_id} )} > View Profile </Text>
                 </TouchableOpacity>
                 </View>
                 
