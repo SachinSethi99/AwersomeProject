@@ -33,7 +33,9 @@ class FriendProfileWall extends Component {
       post_id:'',
       post_id2:'',
       photo:null,
-      text2:''
+      text2:'',
+      id: AsyncStorage.getItem('@session_id'),
+      
     };
   }
 
@@ -129,7 +131,7 @@ class FriendProfileWall extends Component {
 
    
       axios.post('http://localhost:3333/api/1.0.0/user/'+user_id+"/post", {
-        "text2":this.state.post,          
+        "text":this.state.post,          
       }, {
         headers: {
           'Content-Type': 'application/json',
@@ -281,15 +283,10 @@ class FriendProfileWall extends Component {
                     <Text onPress={() => this.newPostFriends()} style={styles.post} > Add New Post </Text>
                 </TouchableOpacity> 
 
-
-
-
-        <FlatList
+                <FlatList
             data={this.state.postData}
-          
-      
             renderItem={({item}) => {
-             if(this.state.user_id != this.state.userid1){
+       
                return(
                 <View>
                 
@@ -298,11 +295,8 @@ class FriendProfileWall extends Component {
                   marginLeft: 10,marginRight:10, marginTop: 10,marginBottom:10, borderWidth: 2}}
                 onChangeText={value => this.setState({post_id2: value})}
                 value={this.state.post_id2}
-                />
+                />     
 
-                <Text >User : {item.text2}   </Text>       
-
-              
               <TouchableOpacity>
                   <Text onPress={() => this.updatePostFriend(item.post_id)} style={styles.upDatePost} > Update Post </Text>
               </TouchableOpacity>
@@ -311,36 +305,6 @@ class FriendProfileWall extends Component {
                   <Text onPress={() => this.deletePostFriends(item.post_id)} style={styles.delpost} > Delete Post </Text>
               </TouchableOpacity>  
 
-              </View>
-
-
-
-               );
-
-             }else {
-               return(
-              
-                <View> 
-
-           {/* ****************************************************************************************************** */}
-{/*  
-                    <TextInput placeholder = 'Update Your Post:' 
-                      style={{fontSize: 25, backgroundColor: '#ffffff',textAlign:'center',
-                        marginLeft: 10,marginRight:10, marginTop: 10,marginBottom:10, borderWidth: 2}}
-                      onChangeText={value => this.setState({post_id2: value})}
-                      value={this.state.post_id2}
-                      />
-
-                    
-                    <TouchableOpacity>
-                        <Text onPress={() => this.updatePostFriend(item.post_id)} style={styles.upDatePost} > Update Post </Text>
-                    </TouchableOpacity>
-                      
-                    <TouchableOpacity>
-                        <Text onPress={() => this.deletePostFriends(item.post_id)} style={styles.delpost} > Delete Post </Text>
-                    </TouchableOpacity>   */}
-  
-      {/* ****************************************************************************************************** */}
                     <Text>{item.text}</Text>
                     <TouchableOpacity>
                         <Text onPress={() => this.addLike(item.post_id)}>  Like    </Text>
@@ -355,7 +319,7 @@ class FriendProfileWall extends Component {
                );
 
 
-                  }
+                  
                 }}
 
         />
