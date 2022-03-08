@@ -4,6 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { FlatList } from 'react-native-web';
 import { Camera } from 'expo-camera';
+/* eslint-disable */ 
 
 class ProfilePage extends Component {
   constructor(props){
@@ -18,6 +19,7 @@ class ProfilePage extends Component {
       post_id: '',
       isAuthenticated: true,
       photo: null,
+      draft: null
     };
   }
 
@@ -157,6 +159,36 @@ class ProfilePage extends Component {
         console.log(error);
       });
   };
+    // save the daraft message to localstorage 
+  saveChit = async() => {
+     const id = await AsyncStorage.getItem('@session_id');
+     this.state.draft = {
+      "post_id": this.state.post_id,
+      "timestamp": Date.parse(new Date()),
+      "post_content": this.state.postData,
+      "user": {
+        "user_id": 0,
+        "given_name": this.state.given_name,
+        "family_name": this.state.family_name,
+        "email": this.state.email
+      }
+    }
+    //set drafts into localstorage stringify object 
+    let draftmess = JSON.stringify(this.state.draft),
+    AsyncStorage.setItem('@draftMessages', draftmess).then(() => {
+      alert("Saved draft!")
+    })
+      //alert user if an error occured saving to drafts
+      .catch(() => {
+        alert("Error occured saving draft")
+      })
+    //return back to home screen
+    // this.props.navigation.navigate("Home")
+  }
+      
+  
+ 
+  
 
   deletePost = async(post_id) => {
     const id = await AsyncStorage.getItem('@session_id');
@@ -236,6 +268,11 @@ class ProfilePage extends Component {
                         <Text onPress={() => this.updatePost(item.post_id)} style={styles.upDatePost} > Update Post </Text>
                     </TouchableOpacity> 
 
+
+                    <TouchableOpacity>
+                        <Text style={styles.draftPost} > Save Post </Text>
+                    </TouchableOpacity> 
+
                     <TextInput placeholder = 'Update Your Post:' 
                       style={{fontSize: 25, backgroundColor: '#ffffff',textAlign:'center',
                         marginLeft: 10,marginRight:10, marginTop: 10,marginBottom:10, borderWidth: 2}}
@@ -304,6 +341,14 @@ const styles = StyleSheet.create({
     marginLeft:260,
   },
   upDatePost: {
+    fontSize:18,
+    fontfamily:"lucida grande",
+    color: "#fffcfa",
+    marginTop:0,
+    marginLeft:255,
+
+  },
+  draftPost: {
     fontSize:18,
     fontfamily:"lucida grande",
     color: "#fffcfa",
