@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Image, Text, TextInput, View, Button, StyleSheet, Alert, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
 import axios from 'axios';
 import { FlatList } from 'react-native-web';
 import { Camera } from 'expo-camera';
@@ -134,6 +135,7 @@ class ProfilePage extends Component {
   updatePost = async(post_id) => {
     const id = await AsyncStorage.getItem('@session_id');
     const session_token = await AsyncStorage.getItem('@session_token');
+  
     // const post_id = await AsyncStorage.getItem(post_id);
     return fetch('http://localhost:3333/api/1.0.0/user/'+id+'/post/' + post_id, {
       
@@ -174,9 +176,9 @@ class ProfilePage extends Component {
       }
     }
     //set drafts into localstorage stringify object 
-    let draftmess = JSON.stringify(this.state.draft),
+    let draftmess = JSON.stringify(this.state.draft);
     AsyncStorage.setItem('@draftMessages', draftmess).then(() => {
-      alert("Saved draft!")
+      console.log("Saved draft!");
     })
       //alert user if an error occured saving to drafts
       .catch(() => {
@@ -270,7 +272,7 @@ class ProfilePage extends Component {
 
 
                     <TouchableOpacity>
-                        <Text style={styles.draftPost} > Save Post </Text>
+                        <Text onPress={() => this.saveChit()} style={styles.draftPost} > Save Post </Text>
                     </TouchableOpacity> 
 
                     <TextInput placeholder = 'Update Your Post:' 
