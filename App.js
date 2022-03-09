@@ -10,6 +10,7 @@ import MyTabs from './tabNavigator';
 // import friendsPage from './viewFriendsPage';
 import CameraPage from './Camera';
 import FriendProfileWall from './FriendsProfile';
+import Followers from './FriendsFollower';
 
 
 const Stack = createNativeStackNavigator();
@@ -23,6 +24,7 @@ function navigator () {
             <Stack.Screen name ="FriendsProfilePage" component={FriendProfileWall} />
             <Stack.Screen name = "SignUpPage" component={SignUpPage} />
             <Stack.Screen name ="CameraPage" component={CameraPage}/>
+            <Stack.Screen name ="FreindsFollowers" component={Followers}/>
             <Stack.Screen name="ProfilePage" component={MyTabs}options={{headerShown:false,}} />
             {/* <Stack.Screen name = "LogOutPage" component={LogOutPage} /> */}
             </Stack.Navigator>

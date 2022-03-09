@@ -314,6 +314,9 @@ displayPost(item){
                   }}
                 />
 
+  
+
+
         <Text > Add Your Post: </Text> 
         <TextInput placeholder = 'Enter Your Post On Friend Wall:' 
             style={{fontSize: 25, backgroundColor: '#ffffff',textAlign:'center',

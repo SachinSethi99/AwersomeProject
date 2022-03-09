@@ -30,11 +30,11 @@ class ProfilePage extends Component {
       this.getData();
       this.get_profile_image();
     });    
-
   }
     
   componentWillUnmount() {
     this.unsubscribe();
+    
   }
     
   getData = async () => {
@@ -46,7 +46,6 @@ class ProfilePage extends Component {
         'X-Authorization':  value,
       },
     })
-    
       .then((response) => {
         if(response.status === 200){
           return response.json();
@@ -84,7 +83,7 @@ class ProfilePage extends Component {
       const id = await AsyncStorage.getItem('@session_id');
       const session_token = await AsyncStorage.getItem('@session_token');
       const post_id = await AsyncStorage.setItem(post_id);
-      axios.post('http://localhost:3333/api/1.0.0/user/'+id+"/post", {
+      axios.post('http://localhost:3333/api/1.0.0/user/'+id+'/post', {
         "text":this.state.post,          
       }, {
         headers: {
@@ -161,31 +160,28 @@ class ProfilePage extends Component {
         console.log(error);
       });
   };
+
+
     // save the daraft message to localstorage 
-  saveChit = async() => {
+  saveChat = async() => {
      const id = await AsyncStorage.getItem('@session_id');
      this.state.draft = {
-      "post_id": this.state.post_id,
       "timestamp": Date.parse(new Date()),
-      "post_content": this.state.postData,
-      "user": {
-        "user_id": 0,
-        "given_name": this.state.given_name,
-        "family_name": this.state.family_name,
-        "email": this.state.email
+      "text": this.state.postData,
+      "author": {
+        "user_id": id
       }
-    }
-    //set drafts into localstorage stringify object 
-    let draftmess = JSON.stringify(this.state.draft);
+    } 
+    const draftmess = JSON.stringify(this.state.draft);
     AsyncStorage.setItem('@draftMessages', draftmess).then(() => {
       console.log("Saved draft!");
-    })
-      //alert user if an error occured saving to drafts
+    }
+    )
+  
       .catch(() => {
         alert("Error occured saving draft")
       })
-    //return back to home screen
-    // this.props.navigation.navigate("Home")
+
   }
       
   
@@ -255,6 +251,7 @@ class ProfilePage extends Component {
                 <TouchableOpacity>
                     <Text onPress={() => this.newPost()} style={styles.post} > Add New Post </Text>
                 </TouchableOpacity>  
+
       
                 <FlatList
                 data={this.state.postData}
@@ -272,8 +269,9 @@ class ProfilePage extends Component {
 
 
                     <TouchableOpacity>
-                        <Text onPress={() => this.saveChit()} style={styles.draftPost} > Save Post </Text>
-                    </TouchableOpacity> 
+                        <Text onPress={() => this.saveChat()} style={styles.draftPost} > Save Post </Text>
+                    </TouchableOpacity>
+                     
 
                     <TextInput placeholder = 'Update Your Post:' 
                       style={{fontSize: 25, backgroundColor: '#ffffff',textAlign:'center',
