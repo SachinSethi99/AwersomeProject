@@ -173,7 +173,7 @@ const styles = StyleSheet.create({
     color: "#fffcfa"
 },
   background : {
-      backgroundColor: '#4267B2',
+    backgroundColor: '#800000',
       flex : 1,
   },
   profileTitle:{

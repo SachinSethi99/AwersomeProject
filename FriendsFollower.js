@@ -207,8 +207,7 @@ const styles = StyleSheet.create({
 
   body: {
 
-  backgroundColor: '#60BEB0',
-
+    backgroundColor: '#800000',
   flex:  1,
 
   display: 'flex',
