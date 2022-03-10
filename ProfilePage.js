@@ -20,7 +20,8 @@ class ProfilePage extends Component {
       post_id: '',
       isAuthenticated: true,
       photo: null,
-      draft: null
+      draft: null,
+      user_id:''
     };
   }
 
@@ -126,10 +127,6 @@ class ProfilePage extends Component {
         console.log("error", err);
       });
   };
-  
-  // componentDidMount(){
-  //   this.get_profile_image();
-  // }
 
   updatePost = async(post_id) => {
     const id = await AsyncStorage.getItem('@session_id');
@@ -184,10 +181,6 @@ class ProfilePage extends Component {
 
   }
       
-  
- 
-  
-
   deletePost = async(post_id) => {
     const id = await AsyncStorage.getItem('@session_id');
     const session_token = await AsyncStorage.getItem('@session_token');
@@ -209,6 +202,48 @@ class ProfilePage extends Component {
         console.log(error);
       });
   };
+
+
+  displayPost(item){
+    //if(item.author.user_id != this.state.id){
+      
+      console.log(item.author.user_id),
+      console.log(this.state.id),
+      <View style={{height:140, backgroundColor: "pink", color: 'black'}}>
+      <Text >User : {item.text}   </Text>
+
+    {/* </View>  
+    }else{ */}
+
+     {/* </View> <View style={{height:140, backgroundColor: "pink", color: 'black'}}> */}
+      <Text >{this.state.id} : {item.text}   </Text>
+      
+ <TouchableOpacity>
+     <Text onPress={() => this.deletePost(item.post_id)} style={styles.delpost} > Delete Post </Text>
+ </TouchableOpacity>  
+
+ <TouchableOpacity>
+     <Text onPress={() => this.updatePost(item.post_id)} style={styles.upDatePost} > Update Post </Text>
+ </TouchableOpacity> 
+
+
+ <TouchableOpacity>
+     <Text onPress={() => this.saveChat()} style={styles.draftPost} > Save Post </Text>
+ </TouchableOpacity>
+  
+
+ <TextInput placeholder = 'Update Your Post:' 
+   style={{fontSize: 25, backgroundColor: '#ffffff',textAlign:'center',
+     marginLeft: 10,marginRight:10, marginTop: 10,marginBottom:10, borderWidth: 2}}
+   onChangeText={value => this.setState({post_id2: value})}
+   value={this.state.post_id2}
+   />
+
+      </View>
+      //}
+  }
+
+
     
   render() {
     if (this.state.isLoading){
@@ -241,7 +276,7 @@ class ProfilePage extends Component {
                   }}
                 />
 
-                <Text style={styles.profileTitle2}> Add Your Post: </Text> 
+           
                 <TextInput placeholder = 'Enter Your Post:' 
                 style={{fontSize: 25, backgroundColor: '#ffffff',textAlign:'center',
                   marginLeft: 10,marginRight:10, marginTop: 10,marginBottom:10, borderWidth: 2}}
@@ -252,12 +287,32 @@ class ProfilePage extends Component {
                     <Text onPress={() => this.newPost()} style={styles.post} > Add New Post </Text>
                 </TouchableOpacity>  
 
-      
+
+                {/* <FlatList
+                data={this.state.postData}
+                renderItem={({item}) =>(this.displayPost(item))}  
+                keyExtractor={(item,index)=> item.post_id.toString()}
+                />    */}
+{/* 
                 <FlatList
+                
                 data={this.state.postData}
                 renderItem={({item}) => (
+                 this.displayPost(item)                  
+                  )}
+                keyExtractor={(item,index) => item.post_id.toString()}
+              /> */}
+
+
+              <FlatList
+                
+                data={this.state.postData}
+                
+                renderItem={({item}) => (
+                
+                 //this.displayPost(item)
                     <View style={{height:140, backgroundColor: "pink", color: 'black'}}>
-                      <Text >User : {item.text}   </Text> 
+                      <Text >{this.state.id} : {item.text}   </Text> 
 
                     <TouchableOpacity>
                         <Text onPress={() => this.deletePost(item.post_id)} style={styles.delpost} > Delete Post </Text>
@@ -280,11 +335,12 @@ class ProfilePage extends Component {
                       value={this.state.post_id2}
                     />
 
-                    </View>
+                   </View>
                 )}
                 keyExtractor={(item,index) => item.post_id.toString()}
-              />
-
+              />    
+                
+      
               </View>
       );
     }
@@ -298,7 +354,7 @@ const styles = StyleSheet.create({
     color: "#fffcfa",
   },
   background : {
-    backgroundColor: '#4267B2',
+    backgroundColor: '#800000',
     flex : 1,
   },
   profileTitle:{
@@ -360,3 +416,40 @@ const styles = StyleSheet.create({
 });
 
 export default ProfilePage;
+
+
+//  <FlatList
+                
+//                 data={this.state.postData}
+                
+//                 renderItem={({item}) => (
+                
+//                  //this.displayPost(item)
+//                     <View style={{height:140, backgroundColor: "pink", color: 'black'}}>
+//                       <Text >{this.state.id} : {item.text}   </Text> 
+
+//                     <TouchableOpacity>
+//                         <Text onPress={() => this.deletePost(item.post_id)} style={styles.delpost} > Delete Post </Text>
+//                     </TouchableOpacity>  
+
+//                     <TouchableOpacity>
+//                         <Text onPress={() => this.updatePost(item.post_id)} style={styles.upDatePost} > Update Post </Text>
+//                     </TouchableOpacity> 
+
+
+//                     <TouchableOpacity>
+//                         <Text onPress={() => this.saveChat()} style={styles.draftPost} > Save Post </Text>
+//                     </TouchableOpacity>
+                     
+
+//                     <TextInput placeholder = 'Update Your Post:' 
+//                       style={{fontSize: 25, backgroundColor: '#ffffff',textAlign:'center',
+//                         marginLeft: 10,marginRight:10, marginTop: 10,marginBottom:10, borderWidth: 2}}
+//                       onChangeText={value => this.setState({post_id2: value})}
+//                       value={this.state.post_id2}
+//                     />
+
+//                    </View>
+//                 )}
+//                 keyExtractor={(item,index) => item.post_id.toString()}
+//               /> 

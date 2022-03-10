@@ -11,8 +11,8 @@ class LoginPage extends Component { // login pager where the user enter their de
     this.state = {
       isLoading: true,
       id: '',
-      email: 'sachinsethi1999@gmail.com',
-      password: 'sachinsethi',
+      email: 'steve@gmail.com',
+      password: 'password',
     };
   }
 

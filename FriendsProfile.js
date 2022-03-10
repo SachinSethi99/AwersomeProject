@@ -252,25 +252,26 @@ class FriendProfileWall extends Component {
   };
 
 displayPost(item){
-
   if(item.author.user_id==this.state.id){
+   
     return(
-      <View>
-        <TextInput placeholder = 'Update Your Post:' 
+      
+      <View  style={styles.container}>      
+        <TextInput placeholder = 'UPDATE YOUR POST' 
           style={{fontSize: 25, backgroundColor: '#ffffff',textAlign:'center',
             marginLeft: 10,marginRight:10, marginTop: 10,marginBottom:10, borderWidth: 2}}
           onChangeText={value => this.setState({post_id2: value})}
           value={this.state.post_id2}/>
 
         <TouchableOpacity>
-            <Text onPress={() => this.updatePostFriend(item.post_id)} style={styles.upDatePost} > Update Post </Text>
+            <Text onPress={() => this.updatePostFriend(item.post_id)} style={styles.upDatePost} > UPDATE POST </Text>
         </TouchableOpacity>
           
         <TouchableOpacity>
-            <Text onPress={() => this.deletePostFriends(item.post_id)} style={styles.delpost} > Delete Post </Text>
+            <Text onPress={() => this.deletePostFriends(item.post_id)} style={styles.delpost} > DELETE POST </Text>
         </TouchableOpacity>  
 
-        <Text>{item.text}</Text>
+        <Text style={styles.frinedPost}> YOUR POST:  {item.text}</Text>
         
       </View>
       );
@@ -279,15 +280,15 @@ displayPost(item){
      
    else{
     return(
-      <View>
-          <Text>{item.text}</Text>
+      <View style={styles.container1}>
+          <Text style={styles.frinedPost}> FRIEND POST: {item.text}</Text>
           <TouchableOpacity>
-              <Text onPress={() => this.addLike(item.post_id)}>  Like    </Text>
+              <Text onPress={() => this.addLike(item.post_id)} style={styles.upDatePost} >  LIKE    </Text>
 
           </TouchableOpacity>
           <TouchableOpacity>
 
-              <Text onPress={() => this.removeLike(item.post_id) }> Remove Like</Text>
+              <Text onPress={() => this.removeLike(item.post_id)} style={styles.delpost} > REMOVE LIKE</Text>
           </TouchableOpacity>
       </View>
      ); 
@@ -300,24 +301,21 @@ displayPost(item){
       
       <View style={styles.background}>
         <Text style={styles.title}> SPACEBOOK </Text>
-        <Text style={styles.profileTitle}>Friends Profile</Text>
+        <Text style={styles.profileTitle}>FRIENDS PROFILE</Text>
         <Image
                   source={{
                   uri: this.state.photo,
                   }}
                   style={{
                   borderRadius: 50,
-                  width: 100,
-                  height: 100,
+                  width: 90,
+                  height: 90,
                   marginLeft:5,
                   borderWidth: 3, 
                   }}
                 />
+                
 
-  
-
-
-        <Text > Add Your Post: </Text> 
         <TextInput placeholder = 'Enter Your Post On Friend Wall:' 
             style={{fontSize: 25, backgroundColor: '#ffffff',textAlign:'center',
             marginLeft: 10,marginRight:10, marginTop: 10,marginBottom:10, borderWidth: 2}}
@@ -325,7 +323,7 @@ displayPost(item){
             value={this.state.post}/>
 
         <TouchableOpacity>
-          <Text onPress={() => this.newPostFriends()} style={styles.post} > Add New Post </Text>
+          <Text onPress={() => this.newPostFriends()} style={styles.post} > ADD NEW POST </Text>
         </TouchableOpacity> 
 
         <FlatList
@@ -341,7 +339,7 @@ displayPost(item){
 
 const styles = StyleSheet.create({
   background: {
-    backgroundColor: '#4267B2',
+    backgroundColor: '#800000',
     flex: 1,
   },
   title: {
@@ -361,6 +359,14 @@ const styles = StyleSheet.create({
     marginTop:-5,
     marginLeft:120,
   },
+  frinedPost:{
+    fontSize:20,
+    fontfamily:"lucida grande",
+    color: "#fffcfa",
+    marginLeft: 5,
+    marginBottom: 5
+
+  },
   profileTitle2: {
     fontSize: 20,
     fontfamily: 'lucida grande',
@@ -371,16 +377,46 @@ const styles = StyleSheet.create({
     fontSize:18,
     fontfamily:"lucida grande",
     color: "#fffcfa",
-    marginTop:0,
-    marginLeft:255,
+    // borderColor:"#fffcfa",
+    borderWidth:0,
+    marginTop:5,
+    marginBottom:5,
+    marginLeft:10,
+    marginRight:10,
+    fontWeight: 'bold',
+    textAlign:'center',
+    backgroundColor: '#8FBC8F',
 
   },delpost : {      
     fontSize:18,
     fontfamily:"lucida grande",
     color: "#fffcfa",
-    marginTop:0,
-    marginLeft:255,
+    // borderColor:"#fffcfa",
+    borderWidth:0,
+    marginTop:5,
+    marginBottom:5,
+    marginLeft:10,
+    marginRight:10,
+    fontWeight: 'bold',
+    textAlign:'center',
+    backgroundColor: '#FF7F7F',
+  },  
+  container:{
+    borderColor:"#fffcfa",
+    borderWidth:3.5,
+    marginTop:5,
+    marginBottom:5,
+    marginLeft:10,
+    marginRight:10
   },
+  container1:{
+    borderColor:"#DAA520",
+    borderWidth:3.5,
+    marginTop:5,
+    marginBottom:5,
+    marginLeft:10,
+    marginRight:10
+  }
 
 });
 export default FriendProfileWall;

@@ -130,7 +130,7 @@ class editProfileDetails extends Component {
         <img src= {cameraIcon} style={{width:100, height:80 , marginLeft:145}}/>
         {/* access to the camera for the user can change Image */}
         <TouchableOpacity> 
-                 <Text onPress={() => this.props.navigation.navigate('CameraPage')} style={styles.cameraText}> UPLOAD | CHANGE PROFILE PICTURE</Text>
+                 <Text onPress={() => this.props.navigation.navigate('CameraPage')} style={styles.cameraText}> CHANGE PROFILE PICTURE</Text>
         </TouchableOpacity>
         
         {/* user updates their details */}
@@ -152,11 +152,17 @@ const styles = StyleSheet.create({
     color: '#fffcfa',
   },
   cameraText:{
-    marginTop: 5,
-    marginLeft: 30,
+    marginTop: 10,
+    marginLeft: 10,
+    marginRight:10,
     fontSize: 20,
     fontfamily: 'lucida grande',
     color: '#fffcfa',
+    backgroundColor: '#DAA520',
+    fontWeight: 'bold',
+    borderWidth:  0, 
+    textAlign: 'center',
+    borderColor:"#fffcfa"
   },
 
   details: {
@@ -172,8 +178,14 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontfamily: 'lucida grande',
     color: '#fffcfa',
-    marginTop: 0,
-    marginLeft: 110,
+    marginTop: 10,
+    marginLeft: 10,
+    marginRight:10,
+    backgroundColor: '#8FBC8F',
+    fontWeight: 'bold',
+    borderWidth:  0, 
+    textAlign: 'center',
+    borderColor:"#fffcfa"
   },
 
 });

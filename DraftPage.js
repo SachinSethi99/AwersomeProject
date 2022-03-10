@@ -161,7 +161,7 @@ sendChat = async () =>{
       console.log(this.state.draftMessage);
       return (
           <View style={styles.background}> 
-          
+          <Text style= {styles.title}> SPACEBOOK </Text>
            <Text style={styles.profileTitle}> Draft Page  </Text>
          
                 {/* <Text>Message: {this.state.draftMessage.Text}</Text>
@@ -178,18 +178,15 @@ sendChat = async () =>{
               <View>  */}
 
                 {/* <Text>Message: {this.state.draftMessage}</Text> */}
-                <Text>Message: {this.state.draftMessage.Text}</Text>
-                <Text>{`${new Date(this.state.draftMessage.timestamp).toLocaleTimeString()} - ${new Date(this.state.draftMessage.timestamp).toLocaleDateString()}`}</Text>
+                <View  style={styles.container}>
+                <Text style={styles.frinedPost}>MESSAGE: {this.state.draftMessage.Text}</Text>
+                <Text style={styles.frinedPost} >DATE DRAFT SAVED: {`${new Date(this.state.draftMessage.timestamp).toLocaleTimeString()} - ${new Date(this.state.draftMessage.timestamp).toLocaleDateString()}`}</Text>
                 
                 <TouchableOpacity> 
-                  <Text onPress={() => this.sendChat()} >Post Draft</Text>
+                  <Text onPress={() => this.sendChat()} style={styles.post}>POST DRAFT</Text>
                 </TouchableOpacity>
-               {/* </View>
-              )}
-              
-              
-              
-            />  */}
+                </View>
+    
             
           
           </View>
@@ -198,6 +195,7 @@ sendChat = async () =>{
   else {
       return (
         <View style={styles.background}> 
+        <Text style= {styles.title}> SPACEBOOK </Text>
         <Text style={styles.profileTitle}> Draft Page  </Text>
         <Text>No draft messages found</Text>
         </View>
@@ -218,14 +216,39 @@ const styles = StyleSheet.create({
     color: '#fffcfa',
   },
   background: {
-    backgroundColor: '#4267B2',
+    backgroundColor: '#800000',
     flex: 1,
   },
   profileTitle: {
     fontSize: 35,
     fontfamily: 'lucida grande',
     color: '#fffcfa',
-    marginLeft: 90,
+    marginLeft: 110,
+    marginBottom:2
+  },
+  container:{
+    borderColor:"#fffcfa",
+    borderWidth:3.5,
+    marginTop:5,
+    marginBottom:5,
+    marginLeft:10,
+    marginRight:10
+  }, 
+  post : {      
+    fontSize:20,
+    fontfamily:"lucida grande",
+    color: "#fffcfa",
+    marginTop:5,
+    marginBottom:5,
+    marginLeft:120,
+  },
+  frinedPost:{
+    fontSize:20,
+    fontfamily:"lucida grande",
+    color: "#fffcfa",
+    marginLeft: 5,
+    marginBottom: 5
+
   },
 });
 export default Draft;

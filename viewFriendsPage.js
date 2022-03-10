@@ -134,20 +134,21 @@ class followerPage extends Component {
 
             return (      
               <View style={styles.background}>
-                <Text style={styles.profileTitle}> SEARCH REQUESTS  </Text>
+                  <Text style= {styles.title}> SPACEBOOK </Text>
+                <Text style={styles.profileTitle}> RECIEVED REQUESTS  </Text>
               <FlatList
               data = {this.state.friendsData}
               renderItem={({item}) => (
-                <View>
-                <Text style={{height:100, backgroundColor: '#fafa75', color: 'black'}}> Outstanding Friend Requests: {item.first_name} {item.last_name}
+                <View style={styles.container}>
+                <Text style={styles.userName}> FRIEND REQUESTS BY: {item.first_name} {item.last_name}
                 </Text>
       
             <TouchableOpacity>
-            <Text onPress={() => this.acceptRequest(item.user_id)} style={styles.post} > Accept </Text>
+            <Text onPress={() => this.acceptRequest(item.user_id)} style={styles.post} > ACCPETED </Text>
             </TouchableOpacity>
       
             <TouchableOpacity>
-            <Text onPress={() => this.rejectRequest(item.user_id)} style={styles.post} > Reject  </Text>
+            <Text onPress={() => this.rejectRequest(item.user_id)} style={styles.post1} > REJECTED  </Text>
             </TouchableOpacity>  
       
                 </View>
@@ -180,23 +181,54 @@ const styles = StyleSheet.create({
     fontSize:35,
     fontfamily:"lucida grande",
     color: "#fffcfa",
-    marginLeft: 90
+    marginLeft: 20
   },
 
-post : {
+  post : {
 
-    fontSize: 32,
-    color: '#FFFFFF',
-    backgroundColor: '#81CD2A',
-    width: 160,
-    height: 60,
+    fontSize:20,
+    fontfamily:"lucida grande",
+    color: "#fffcfa",
+    backgroundColor: '#8FBC8F',
     fontWeight: 'bold',
-    borderWidth:  3,  
-    borderColor:  '#e3e327',
-    marginLeft: 135,
-    marginTop: 30,
+    borderWidth:  0,  
+    marginRight: 15,
+    marginLeft:15,
+    marginBottom:5,
     textAlign: 'center'
+    },
+
+post1 : {
+
+  fontSize:20,
+  fontfamily:"lucida grande",
+  color: "#fffcfa",
+  backgroundColor: '#FF7F7F',
+  fontWeight: 'bold',
+  borderWidth:  0,  
+  marginRight: 15,
+  marginLeft:15,
+  marginBottom:5,
+  textAlign: 'center'
   },
+  container:{
+    borderColor:"#fffcfa",
+    borderWidth:3.5,
+    marginTop:5,
+    marginBottom:5,
+    marginLeft:10,
+    marginRight:10
+
+
+  },
+  userName: {
+    height:30, 
+    marginTop:5,
+    marginLeft:10,
+    //marginRight:10,
+    color: "#fffcfa",
+
+  }
 
 });
 

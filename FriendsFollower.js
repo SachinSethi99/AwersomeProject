@@ -161,26 +161,23 @@ class Followers extends Component {
 
       return (
 
-        <View style={styles.body}>
-
-          <Text style={styles.title}> VIEW FRIENDS FOLLOWERS </Text>
+        <View style={styles.background}>
+        <Text style= {styles.title}> SPACEBOOK </Text>
+        <Text style={styles.profileTitle}> FRIENDS FOLLOWERS </Text>
 
  
 
       <FlatList
-
         data = {this.state.friendsData}
-
         renderItem={({item}) => (
+      <View  style={styles.container}>
 
-      <View>
+      <Text style={styles.userName}>
+        FRIEND:  {item.user_givenname} {item.user_familyname} {item.user_email} 
+      </Text>
 
-   
-
-      <Text style={{height:130, width: 250, backgroundColor: '#858713', color: 'white', marginTop: 50, marginLeft: 75, fontSize: 22}}>
-
-        USER FRIENDS:  {item.user_givenname} {item.user_familyname} {item.user_email} {item.friend_count}
-
+      <Text style={styles.email}>
+        EMAIL: {item.user_email} 
       </Text>
 
         </View>
@@ -214,32 +211,42 @@ const styles = StyleSheet.create({
 
 },
 
-title: {
-
-  color: '#a8a819',
-
-  fontSize: 22,
-
-  marginTop: 70,
-
-  marginLeft: 40,
-
-  fontWeight: 'bold',
-
-  textAlign: 'center',
-
-  borderWidth:  3,  
-
-  borderColor: '#e3e327',
-
-  backgroundColor:  '#0e8269',
-
-  width: 350,
-
-  height: 50,
-
-  borderRadius: 10,
-
+background : {
+  backgroundColor: '#800000',
+    flex : 1,
+},
+title:{
+  fontSize:65,
+  fontfamily:"lucida grande",
+  color: "#fffcfa"
+},
+profileTitle:{
+  fontSize:35,
+  fontfamily:"lucida grande",
+  color: "#fffcfa",
+  marginLeft: 25
+},
+userName: {
+  height:30, 
+  marginTop:5,
+  marginLeft:2,
+  //marginRight:10,
+  color: "#fffcfa",
+},
+email: {
+  height:30, 
+  marginTop:0,
+  marginLeft:2,
+  //marginRight:10,
+  color: "#fffcfa",
+},
+container:{
+  borderColor:"#fffcfa",
+  borderWidth:3.5,
+  marginTop:10,
+  marginBottom:5,
+  marginLeft:10,
+  marginRight:10
 },
 
 });

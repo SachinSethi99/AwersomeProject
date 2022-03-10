@@ -13,7 +13,6 @@ class LogOutPage extends Component{
       
       }
 
-
     componentDidMount(){
         this._unsubscribe = this.props.navigation.addListener('focus', () => {
             this.checkLoggedIn();
@@ -60,14 +59,19 @@ class LogOutPage extends Component{
 
     render(){
         return (
-            <View>
-                <Button
-                    title="I'm outta here"
-                    onPress={() => this.logout()}
-                />
+            <View style={styles.background}>
+            <Text style= {styles.title}> SPACEBOOK </Text>
+            <Text  style ={styles.profileTitle} >LOG OUT</Text>
+
                 <TouchableOpacity>
-                   <Text onPress= {() => this.props.navigation.navigate('LoginPage')}> beck to sign in </Text>
+                   <Text onPress= {() => this.props.navigation.navigate('Profile Page')} style={styles.upDatePost}> BACK TO PROFILE PAGE </Text>
                 </TouchableOpacity>
+                
+                <TouchableOpacity>
+                   <Text onPress={() => this.logout()} style={styles.delpost}> LOG OUT, OFF TO SIGN IN PAGE </Text>
+                </TouchableOpacity>
+                
+             
             </View>
         )
     }
@@ -75,3 +79,49 @@ class LogOutPage extends Component{
 
 export default LogOutPage;
 
+const styles = StyleSheet.create({
+    title: {
+      fontSize: 65,
+      fontfamily: 'lucida grande',
+      color: '#fffcfa',
+    },
+    background: {
+      backgroundColor: '#800000',
+      flex: 1,
+    },
+    profileTitle: {
+      fontSize: 35,
+      fontfamily: 'lucida grande',
+      color: '#fffcfa',
+      marginLeft: 120,
+      marginBottom:2
+    },
+    upDatePost: {
+        fontSize:18,
+        fontfamily:"lucida grande",
+        color: "#fffcfa",
+        // borderColor:"#fffcfa",
+        borderWidth:0,
+        marginTop:20,
+        marginBottom:5,
+        marginLeft:10,
+        marginRight:10,
+        fontWeight: 'bold',
+        textAlign:'center',
+        backgroundColor: '#8FBC8F',
+    
+      },delpost : {      
+        fontSize:18,
+        fontfamily:"lucida grande",
+        color: "#fffcfa",
+        // borderColor:"#fffcfa",
+        borderWidth:0,
+        marginTop:5,
+        marginBottom:5,
+        marginLeft:10,
+        marginRight:10,
+        fontWeight: 'bold',
+        textAlign:'center',
+        backgroundColor: '#FF7F7F',
+      }, 
+});

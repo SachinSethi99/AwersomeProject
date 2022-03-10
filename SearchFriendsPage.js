@@ -83,32 +83,32 @@ class FriendPages extends Component {
         
             <View style={styles.background}>
             <Text style= {styles.title}> SPACEBOOK </Text>
-            <Text  style ={styles.profileTitle} >Search for Friends</Text>
+            <Text  style ={styles.profileTitle} >SEARCH FOR FRIENDS</Text>
                            
-            <TextInput placeholder = 'Search for friends' 
+            <TextInput placeholder = 'SEARCH FOR FRIENDS' 
             style={{fontSize: 25, backgroundColor: '#ffffff',textAlign:'center',
             marginLeft: 10,marginRight:10, marginTop: 10,marginBottom:10, borderWidth: 2}}
             value={this.state.query} onChangeText={value => this.setState({query: value})}/>
              
 
             <TouchableOpacity>
-            <Text onPress={() => this.getData()}> Search </Text>
+            <Text onPress={() => this.getData()} style={styles.serachBar}> SEARCH </Text>
             </TouchableOpacity> 
             <FlatList
             data = {this.state.friendsData}
             renderItem={({item}) => (
-            <View>
-                <Text style={{height:20, backgroundColor: '#fafa75', color: 'black' }}> User Name: {item.user_givenname} {item.user_familyname} </Text>
+            <View style={styles.container}>
+                <Text style={styles.userName}> {item.user_givenname} {item.user_familyname} </Text>
                 
                 <TouchableOpacity>
-                    <Text onPress={() => this.props.navigation.navigate('FriendsProfilePage', {user_id: item.user_id} )} > View Profile </Text>
+                    <Text onPress={() => this.props.navigation.navigate('FriendsProfilePage', {user_id: item.user_id} )}  style={styles.post}> VIEW PROFILE </Text>
                 </TouchableOpacity>
 
 
 
                 <TouchableOpacity>
-          <Text onPress={() => this.props.navigation.navigate('FreindsFollowers' , {user_id: item.user_id})} style={styles.post} > Followers </Text>
-        </TouchableOpacity> 
+                     <Text onPress={() => this.props.navigation.navigate('Freinds Followers' , {user_id: item.user_id})} style={styles.post} > FOLLOWERS </Text>
+                </TouchableOpacity> 
                 </View>
                 
                 )}
@@ -132,14 +132,47 @@ profileTitle:{
     fontSize:35,
     fontfamily:"lucida grande",
     color: "#fffcfa",
-    marginLeft: 90
+    marginLeft: 25
   },
   profileTitle2:{
     fontSize:20,
     fontfamily:"lucida grande",
     color: "#fffcfa",
     marginLeft: 10
-
+  },
+  serachBar:{
+    fontSize:20,
+    fontfamily:"lucida grande",
+    color: "#fffcfa",
+    marginTop:-5,
+    marginLeft:155,
+  },
+  userName: {
+    height:30, 
+    marginTop:5,
+    marginLeft:140,
+    //marginRight:10,
+    color: "#fffcfa",
+  },
+  container:{
+    borderColor:"#fffcfa",
+    borderWidth:3.5,
+    marginTop:5,
+    marginBottom:5,
+    marginLeft:10,
+    marginRight:10
+  },
+  post : {
+    fontSize:20,
+    fontfamily:"lucida grande",
+    color: "#fffcfa",
+    backgroundColor: '#8FBC8F',
+    fontWeight: 'bold',
+    borderWidth:  0,  
+    marginRight: 15,
+    marginLeft:15,
+    marginBottom:5,
+    textAlign: 'center'
 
   },
 

@@ -114,7 +114,7 @@ return (
 
     <View style={styles.background}>
     <Text style= {styles.title}> SPACEBOOK </Text>
-    <Text style={styles.profileTitle} > Find Friends </Text>
+    <Text style={styles.profileTitle} > FIND FRIENDS </Text>
 
     <TextInput placeholder='ENTER NAME TO FIND FRIEND' 
     style={{fontSize: 25, backgroundColor: '#ffffff',textAlign:'center',
@@ -191,7 +191,7 @@ post : {
     fontSize:35,
     fontfamily:"lucida grande",
     color: "#fffcfa",
-    marginLeft: 100,
+    marginLeft: 90,
   },
   userName: {
     height:30, 
