@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-import { Image, Text, TextInput, View, Button, StyleSheet, Alert, TouchableOpacity } from 'react-native';
+import { Image, Text, TextInput, View, Button, StyleSheet, Alert, TouchableOpacity,FlatList } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import axios from 'axios';
-import { FlatList } from 'react-native-web';
 import { Camera } from 'expo-camera';
 /* eslint-disable */ 
 
@@ -13,6 +12,7 @@ class ProfilePage extends Component {
     this.state = {
       isLoading: true,
       postData : [],
+      userDetails: [],
       id : '',
       text : '',
       post : '',
@@ -30,7 +30,9 @@ class ProfilePage extends Component {
       this.checkLoggedIn();
       this.getData();
       this.get_profile_image();
-    });    
+    });
+   // this.getData();
+    this.getUserDetails();
   }
     
   componentWillUnmount() {
@@ -60,6 +62,7 @@ class ProfilePage extends Component {
         this.setState({
           isLoading: false,
           postData: responseJson,
+          id:id
         });
       })
       
@@ -203,48 +206,92 @@ class ProfilePage extends Component {
       });
   };
 
-
-  displayPost(item){
-    //if(item.author.user_id != this.state.id){
-      
-      console.log(item.author.user_id),
-      console.log(this.state.id),
-      <View style={{height:140, backgroundColor: "pink", color: 'black'}}>
-      <Text >User : {item.text}   </Text>
-
-    {/* </View>  
-    }else{ */}
-
-     {/* </View> <View style={{height:140, backgroundColor: "pink", color: 'black'}}> */}
-      <Text >{this.state.id} : {item.text}   </Text>
-      
- <TouchableOpacity>
-     <Text onPress={() => this.deletePost(item.post_id)} style={styles.delpost} > Delete Post </Text>
- </TouchableOpacity>  
-
- <TouchableOpacity>
-     <Text onPress={() => this.updatePost(item.post_id)} style={styles.upDatePost} > Update Post </Text>
- </TouchableOpacity> 
-
-
- <TouchableOpacity>
-     <Text onPress={() => this.saveChat()} style={styles.draftPost} > Save Post </Text>
- </TouchableOpacity>
+  getUserDetails = async() => {
+    //let { user_id} = this.props.route.params;
+    const id = await AsyncStorage.getItem('@session_id');
+    const token = await AsyncStorage.getItem('@session_token');
+    return fetch("http://localhost:3333/api/1.0.0/user/"+id, {
+      method: 'GET',
+      headers: {
+        'X-Authorization': token,
+      },
+    })
+    .then((response) => {
+      if (response.status === 200) {
+        return response.json();
+      } if (response.status === 400) {
+        console.log('Error');
+      } else {
+        throw 'Something went wrong';
+      }
+    })
+    .then((responseJson) => {
+      console.log(responseJson)
+      this.setState({
+        //add userDetails in constructor at the
+        userDetails:responseJson
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  };
   
 
- <TextInput placeholder = 'Update Your Post:' 
-   style={{fontSize: 25, backgroundColor: '#ffffff',textAlign:'center',
-     marginLeft: 10,marginRight:10, marginTop: 10,marginBottom:10, borderWidth: 2}}
-   onChangeText={value => this.setState({post_id2: value})}
-   value={this.state.post_id2}
-   />
 
+
+  displayPost(item){
+    console.log(item.author.user_id)
+    console.log(this.state.id)
+    if(item.author.user_id==this.state.id){
+      return(
+        <View style={{height:140, backgroundColor: "pink", color: 'black'}}>
+         <Text > {item.author.first_name}  {item.author.last_name}   : {item.text}   </Text> 
+        
+                             <TouchableOpacity>
+                                 <Text onPress={() => this.deletePost(item.post_id)} style={styles.delpost} > Delete Post </Text>
+                             </TouchableOpacity>  
+        
+                             <TouchableOpacity>
+                                 <Text onPress={() => this.updatePost(item.post_id)} style={styles.upDatePost} > Update Post </Text>
+                             </TouchableOpacity> 
+        
+        
+                             <TouchableOpacity>
+                                 <Text onPress={() => this.saveChat()} style={styles.draftPost} > Save Post </Text>
+                             </TouchableOpacity>
+                             
+        
+                             <TextInput placeholder = 'Update Your Post:' 
+                               style={{fontSize: 25, backgroundColor: '#ffffff',textAlign:'center',
+                                 marginLeft: 10,marginRight:10, marginTop: 10,marginBottom:10, borderWidth: 2}}
+                               onChangeText={value => this.setState({post_id2: value})}
+                               value={this.state.post_id2}
+                             />
+        
+                            </View>
+
+      );
+     }
+    else{
+      return(
+      <View style={{height:140, backgroundColor: "pink", color: 'black'}}>
+      
+        <Text > {item.author.first_name}  {item.author.last_name} : {item.text}   </Text> 
       </View>
-      //}
+        
+      );
+      
+    }
+     
   }
 
 
-    
+
+
+
+
+
   render() {
     if (this.state.isLoading){
       return (
@@ -275,6 +322,8 @@ class ProfilePage extends Component {
                   borderWidth: 3, 
                   }}
                 />
+                <Text>{this.state.userDetails.first_name} {this.state.userDetails.last_name}</Text>
+                <Text>{this.state.userDetails.friend_count}</Text>
 
            
                 <TextInput placeholder = 'Enter Your Post:' 
@@ -287,60 +336,13 @@ class ProfilePage extends Component {
                     <Text onPress={() => this.newPost()} style={styles.post} > Add New Post </Text>
                 </TouchableOpacity>  
 
-
-                {/* <FlatList
-                data={this.state.postData}
-                renderItem={({item}) =>(this.displayPost(item))}  
-                keyExtractor={(item,index)=> item.post_id.toString()}
-                />    */}
-{/* 
-                <FlatList
+                 <FlatList
+                 data={this.state.postData}
+                 renderItem={({item}) => (this.displayPost(item)
                 
-                data={this.state.postData}
-                renderItem={({item}) => (
-                 this.displayPost(item)                  
-                  )}
-                keyExtractor={(item,index) => item.post_id.toString()}
-              /> */}
-
-
-              <FlatList
-                
-                data={this.state.postData}
-                
-                renderItem={({item}) => (
-                
-                 //this.displayPost(item)
-                    <View style={{height:140, backgroundColor: "pink", color: 'black'}}>
-                      <Text >{this.state.id} : {item.text}   </Text> 
-
-                    <TouchableOpacity>
-                        <Text onPress={() => this.deletePost(item.post_id)} style={styles.delpost} > Delete Post </Text>
-                    </TouchableOpacity>  
-
-                    <TouchableOpacity>
-                        <Text onPress={() => this.updatePost(item.post_id)} style={styles.upDatePost} > Update Post </Text>
-                    </TouchableOpacity> 
-
-
-                    <TouchableOpacity>
-                        <Text onPress={() => this.saveChat()} style={styles.draftPost} > Save Post </Text>
-                    </TouchableOpacity>
-                     
-
-                    <TextInput placeholder = 'Update Your Post:' 
-                      style={{fontSize: 25, backgroundColor: '#ffffff',textAlign:'center',
-                        marginLeft: 10,marginRight:10, marginTop: 10,marginBottom:10, borderWidth: 2}}
-                      onChangeText={value => this.setState({post_id2: value})}
-                      value={this.state.post_id2}
-                    />
-
-                   </View>
-                )}
-                keyExtractor={(item,index) => item.post_id.toString()}
-              />    
-                
-      
+                 )}
+                 keyExtractor={(item,index) => item.post_id.toString()}
+                />     
               </View>
       );
     }
@@ -388,6 +390,21 @@ const styles = StyleSheet.create({
     color: "#fffcfa",
     marginTop:0,
     marginLeft:75,
+  },
+  frinedPost:{
+    fontSize:20,
+    fontfamily:"lucida grande",
+    color: "#fffcfa",
+    marginLeft: 5,
+    marginBottom: 5
+  },
+  container:{
+    borderColor:"#fffcfa",
+    borderWidth:3.5,
+    marginTop:5,
+    marginBottom:5,
+    marginLeft:10,
+    marginRight:10
   },
   delpost : {      
     fontSize:18,
@@ -453,3 +470,24 @@ export default ProfilePage;
 //                 )}
 //                 keyExtractor={(item,index) => item.post_id.toString()}
 //               /> 
+
+
+{/* <View style={styles.container}>
+                  <Text style={styles.frinedPost} >USER : {item.text}   </Text> 
+                    <TouchableOpacity>
+                      <Text onPress={() => this.deletePost(item.post_id)} style={styles.delpost} > Delete Post </Text>
+                    </TouchableOpacity> 
+                    <TouchableOpacity>
+                      <Text onPress={() => this.updatePost(item.post_id)} style={styles.upDatePost} > Update Post </Text>
+                    </TouchableOpacity> 
+                    <TouchableOpacity>
+                      <Text onPress={() => this.saveChat()} style={styles.draftPost} > Save Post </Text>
+                    </TouchableOpacity>
+                     
+                    <TextInput placeholder = 'Update Your Post:' 
+                      style={{fontSize: 25, backgroundColor: '#ffffff',textAlign:'center',
+                      marginLeft: 10,marginRight:10, marginTop: 10,marginBottom:10, borderWidth: 2}}
+                      onChangeText={value => this.setState({post_id2: value})}
+                      value={this.state.post_id2}
+                    />
+                   </View> */}

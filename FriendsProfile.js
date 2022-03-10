@@ -22,6 +22,7 @@ class FriendProfileWall extends Component {
       followers: [],
       following: [],
       foundUser: [],
+      userDetails:[],
       search: '',
       profileImage: '',
       userid1: '',
@@ -87,6 +88,7 @@ class FriendProfileWall extends Component {
       this.get_Friend_profile_image();
     });
     this.getData();
+    this.getUserDetails();
   }
 
   componentWillUnmount() {
@@ -252,6 +254,7 @@ class FriendProfileWall extends Component {
   };
 
 displayPost(item){
+  console.log(item)
   if(item.author.user_id==this.state.id){
    
     return(
@@ -271,7 +274,7 @@ displayPost(item){
             <Text onPress={() => this.deletePostFriends(item.post_id)} style={styles.delpost} > DELETE POST </Text>
         </TouchableOpacity>  
 
-        <Text style={styles.frinedPost}> YOUR POST:  {item.text}</Text>
+        <Text style={styles.frinedPost}> {item.author.first_name} {item.author.last_name}:  {item.text}</Text>
         
       </View>
       );
@@ -281,7 +284,8 @@ displayPost(item){
    else{
     return(
       <View style={styles.container1}>
-          <Text style={styles.frinedPost}> FRIEND POST: {item.text}</Text>
+
+          <Text style={styles.frinedPost}> {item.author.first_name} {item.author.last_name}: {item.text}</Text>
           <TouchableOpacity>
               <Text onPress={() => this.addLike(item.post_id)} style={styles.upDatePost} >  LIKE    </Text>
 
@@ -296,6 +300,40 @@ displayPost(item){
    }
    
 }
+
+getUserDetails = async() => {
+  let { user_id} = this.props.route.params;
+  const id = await AsyncStorage.getItem('@session_id');
+  const token = await AsyncStorage.getItem('@session_token');
+  console.log(user_id);
+  return fetch("http://localhost:3333/api/1.0.0/user/"+ user_id, {
+    method: 'GET',
+    headers: {
+      'X-Authorization': token,
+    },
+  })
+  .then((response) => {
+    if (response.status === 200) {
+      return response.json();
+    } if (response.status === 400) {
+      console.log('Error');
+    } else {
+      throw 'Something went wrong';
+    }
+  })
+  .then((responseJson) => {
+    console.log(responseJson)
+    this.setState({
+      //add userDetails in constructor at the
+      userDetails:responseJson
+    });
+  })
+  .catch((error) => {
+    console.log(error);
+  });
+};
+
+
   render() {
     return (
       
@@ -314,6 +352,10 @@ displayPost(item){
                   borderWidth: 3, 
                   }}
                 />
+
+                <Text>{this.state.userDetails.first_name} {this.state.userDetails.last_name}</Text>
+                <Text>{this.state.userDetails.friend_count}</Text>
+
                 
 
         <TextInput placeholder = 'Enter Your Post On Friend Wall:' 
