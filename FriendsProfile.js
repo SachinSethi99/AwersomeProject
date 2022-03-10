@@ -349,18 +349,19 @@ getUserDetails = async() => {
                   width: 90,
                   height: 90,
                   marginLeft:5,
-                  borderWidth: 3, 
+                  borderWidth: 0, 
                   }}
                 />
 
-                <Text>{this.state.userDetails.first_name} {this.state.userDetails.last_name}</Text>
-                <Text>{this.state.userDetails.friend_count}</Text>
-
+      
+                <Text style={styles.post2}> FRIEND NAME: {this.state.userDetails.first_name} {this.state.userDetails.last_name}</Text>
+                <Text style={styles.post3}> FRIEND COUNT: {this.state.userDetails.friend_count}</Text>
+             
                 
 
         <TextInput placeholder = 'Enter Your Post On Friend Wall:' 
             style={{fontSize: 25, backgroundColor: '#ffffff',textAlign:'center',
-            marginLeft: 10,marginRight:10, marginTop: 10,marginBottom:10, borderWidth: 2}}
+            marginLeft: 10,marginRight:10, marginTop: 25, marginBottom:10, borderWidth: 2}}
             onChangeText={value => this.setState({post: value})}
             value={this.state.post}/>
 
@@ -458,7 +459,22 @@ const styles = StyleSheet.create({
     marginBottom:5,
     marginLeft:10,
     marginRight:10
-  }
+  },
+  post2 : {      
+    fontSize:20,
+    fontfamily:"lucida grande",
+    color: "#fffcfa",
+    marginBottom:0,
+    marginLeft:100,
+    marginTop:-70,
+  },
+  post3 : {      
+    fontSize:20,
+    fontfamily:"lucida grande",
+    color: "#fffcfa",
+    marginBottom:0,
+    marginLeft:100,
+  },
 
 });
 export default FriendProfileWall;

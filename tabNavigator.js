@@ -13,12 +13,11 @@ const Tab = createBottomTabNavigator();
     return (
       <Tab.Navigator>
         <Tab.Screen name="Profile Page" component={ProfilePage} />
-         <Tab.Screen name = "Search for Friends" component={FriendPages} /> 
+         <Tab.Screen name = "Search Friends" component={FriendPages} /> 
          <Tab.Screen name="Draft Page" component={Draft} />
         <Tab.Screen name="Outstanding Requests" component={followerPage} />
         <Tab.Screen name="Send Friend Request" component={requestfriends} />
         <Tab.Screen name="Setthings" component={editProfileDetails} />
-        {/* <Tab.Screen name = "LogOut" component={LogOutPage} /> */}
       </Tab.Navigator>
     );
   }
