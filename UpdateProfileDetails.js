@@ -130,13 +130,18 @@ class editProfileDetails extends Component {
         <img src= {cameraIcon} style={{width:100, height:80 , marginLeft:145}}/>
         {/* access to the camera for the user can change Image */}
         <TouchableOpacity> 
-                 <Text onPress={() => this.props.navigation.navigate('CameraPage')} style={styles.cameraText}> CHANGE PROFILE PICTURE</Text>
+                 <Text onPress={() => this.props.navigation.navigate('CameraPage')} style={styles.cameraText}> UPLOAD/CHANGE PROFILE PICTURE</Text>
         </TouchableOpacity>
         
         {/* user updates their details */}
         <TouchableOpacity>
           <Text onPress={() => this.updateDetails()} style={styles.updateAccount}> UPDATE ACCOUNT</Text>
         </TouchableOpacity>
+
+        <TouchableOpacity>
+          <Text onPress={() => this.props.navigation.navigate('LogOutPage')} style={styles.delpost}> LOG OUT</Text>
+        </TouchableOpacity>
+
       </View>
     );
   }
@@ -178,7 +183,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontfamily: 'lucida grande',
     color: '#fffcfa',
-    marginTop: 10,
+    marginTop: 5,
     marginLeft: 10,
     marginRight:10,
     backgroundColor: '#8FBC8F',
@@ -186,7 +191,20 @@ const styles = StyleSheet.create({
     borderWidth:  0, 
     textAlign: 'center',
     borderColor:"#fffcfa"
-  },
+  },delpost : {      
+    fontSize:18,
+    fontfamily:"lucida grande",
+    color: "#fffcfa",
+    // borderColor:"#fffcfa",
+    borderWidth:0,
+    marginTop:5,
+    marginBottom:5,
+    marginLeft:10,
+    marginRight:10,
+    fontWeight: 'bold',
+    textAlign:'center',
+    backgroundColor: '#FF7F7F',
+  }, 
 
 });
 export default editProfileDetails;

@@ -11,7 +11,7 @@ import MyTabs from './tabNavigator';
 import CameraPage from './Camera';
 import FriendProfileWall from './FriendsProfile';
 import Followers from './FriendsFollower';
-//import LogOutPage from './LogOutPage';
+import LogOutPage from './LogOutPage';
 
 
 const Stack = createNativeStackNavigator();
@@ -27,7 +27,7 @@ function navigator () {
             <Stack.Screen name ="CameraPage" component={CameraPage}/>
             <Stack.Screen name ="Freinds Followers" component={Followers}/>
             <Stack.Screen name="ProfilePage" component={MyTabs}options={{headerShown:false,}} />
-            {/* <Stack.Screen name = "LogOutPage" component={LogOutPage} /> */}
+            <Stack.Screen name = "LogOutPage" component={LogOutPage} />
             </Stack.Navigator>
 
         </NavigationContainer>
