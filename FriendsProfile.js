@@ -184,7 +184,6 @@ class FriendProfileWall extends Component { //friends wall page
   updatePostFriend = async(post_id) => { //updates post on friends wall, by getting the friends post id
     let { user_id} = this.props.route.params; //gets the id of the friend, if accessed through another user
     const session_token = await AsyncStorage.getItem('@session_token');
-    // const post_id = await AsyncStorage.getItem(post_id);
     return fetch('http://localhost:3333/api/1.0.0/user/'+user_id+'/post/' + post_id, { //gets the friends id and post id to find which post to update on the wal, in the server storage 
     //the post gets patched to be changed with
 
