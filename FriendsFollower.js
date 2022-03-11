@@ -47,7 +47,7 @@ class Followers extends Component { //friends follower page, where user views th
        .then((response) => {
         if(response.status === 200){ //responses if successfull and not 
             return response.json();
-        }else if(response.status === 401){ //change response
+        }else if(response.status === 401){ 
           console.log("Friends can't be recived");
         }else if(response.status ===403){
           console.log("Can only view the friends of yourself or your friends")
@@ -57,8 +57,8 @@ class Followers extends Component { //friends follower page, where user views th
         }else if(response.status ===500){
           console.log("Server Error");
         }
-        else{
-            throw 'Something went wrong';
+        else{ //if response satus ain't found
+            console.log("Something went wrong");
         }
     })
     .then((responseJson) => { //if successfull friends get stored in friends data array to be used in flatlist

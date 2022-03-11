@@ -55,206 +55,247 @@ class FriendProfileWall extends Component { //friends wall page
   };
 
 
-  // get users list of post
+  // get users list of all the posts on the usser profile
   getData = async () => {
-    let { user_id} = this.props.route.params;
+    let { user_id} = this.props.route.params; //gets the id of the friend, if accessed through another user
     const token = await AsyncStorage.getItem('@session_token');
     const id = await AsyncStorage.getItem('@session_id');
 
-    return fetch("http://localhost:3333/api/1.0.0/user/"+user_id+"/post", {
+    return fetch("http://localhost:3333/api/1.0.0/user/"+user_id+"/post", {// uses the friends id to get all of the post assoiated with their account
       headers: {
         'X-Authorization': token,
       },
       method: 'GET',
     })
       .then((response) => {
-        if (response.status === 200) {
-          // this.setState({ friendData: response.data });
+        if (response.status === 200) { //if getting the data of posts is successful then return it else console log the other issues
           return response.json();
         } if (response.status === 400) {
-          console.log('Error');
+          console.log('Error, no chats found');
         } else {
-          throw 'Something went wrong';
+          console.log("Server Error Or Chat can be accessed");
         }
       })
-      .then((responseJson) => {
+      .then((responseJson) => { // stores posts (resposeJson) into the postdata array to be extracted
         this.setState({
           isLoading: false,
           postData: responseJson,
-          id:id
+          id:id //id is set to differencate the user and the friend id
         });
-        console.log(this.state.postData)
+        //console.log(this.state.postData) //prints the postdata to conolsole used for debuging
       })
-      .catch((error) => {
+      .catch((error) => { //catch all other errors and console log them 
         console.log(error);
       });
   };
 
-
-
-  get_Friend_profile_image = async() => {
-    let {user_id} = this.props.route.params;
-    const id = await AsyncStorage.getItem('@session_id');
+  get_Friend_profile_image = async() => { //gets the image of the friend profile
+    let {user_id} = this.props.route.params; //gets the id of the friend, if accessed through another user
     const token = await AsyncStorage.getItem('@session_token');
-    return fetch("http://localhost:3333/api/1.0.0/user/"+user_id+"/photo", {
+    return fetch("http://localhost:3333/api/1.0.0/user/"+user_id+"/photo", { //returns the friends profile image, by getting it from the server
       method: 'GET',
       headers: {
         'X-Authorization': token,
       },
     })
-      .then((res) => {
+      .then((res) => { //response retunrs the blog fuction, in which then resblog used an object that holds the image of the user, the photo prop sotres that photo 
         return res.blob();
       })
-      .then((resBlob) => {
+      .then((resBlob) => { 
         let data = URL.createObjectURL(resBlob);
         this.setState({
-          photo: data,
+          photo: data, 
           isLoading: false,
 
         });
       })
-      .catch((err) => {
-        console.log("error", err);
+      .catch((error) => { //any other response prints the error to the console 
+        console.log("Error", error);
       });
   };
 
 
-  newPostFriends = async () => {
-    let { user_id} = this.props.route.params;
-    const id = await AsyncStorage.getItem('@session_id');
+  newPostFriends = async () => { //function to allow user to post on friends wall
+    let { user_id} = this.props.route.params;//gets the id of the friend, if accessed through another user
     const session_token = await AsyncStorage.getItem('@session_token');
-    const post_id = await AsyncStorage.setItem(post_id);
-    axios.post('http://localhost:3333/api/1.0.0/user/'+user_id+"/post", {
-      "text":this.state.post,
+    const post_id = await AsyncStorage.setItem(post_id); 
+    axios.post('http://localhost:3333/api/1.0.0/user/'+user_id+"/post", { //posts the post from user to the friends wall by using the friends id 
+      "text":this.state.post, //text stores the post and it can viewes in the server 
     }, {
       headers: {
         'Content-Type': 'application/json',
         'X-Authorization': session_token,
       },
 
-    }).then(resp => { //repsones
-      console.log("Chat publised");
-      this.getData();
+    }).then((response) => { 
+      if(response.status ===201){ //if response is 201 then chat can be added else the other responses will consolse log the issue 
+        console.log("Chat publised");
+        this.getData();
+      }else if(response.status === 401){
+        console.log("Can't add chat");
+      }else if(response.status === 404){
+        console.log("Chat not found");
+      }else if (response.status === 500){
+        console.log("Server Error");
+      }else{//any other response prints the error to the console 
+        console.log("Something went wrong")
+      }
+
     })
-      .catch(error => {
+      .catch(error => {//any other response prints the error to the console 
         console.log(error);
-        alert("Post couldn't be sent to the server successfully");
       });
-
-
 };
 
-  // delete
-  deletePostFriends = async(post_id) => {
-    //const id = await AsyncStorage.getItem('@session_id');
-    let { user_id} = this.props.route.params;
+ 
+  deletePostFriends = async(post_id) => { //function to delete a post on a friends wall by getting the friends post id
+    let { user_id} = this.props.route.params; //gets the id of the friend, if accessed through another user
     const session_token = await AsyncStorage.getItem('@session_token');
-    // const post_id = await AsyncStorage.getItem(post_id);
-    return fetch('http://localhost:3333/api/1.0.0/user/'+user_id+'/post/' + post_id, {
-      method: 'delete',
+    return fetch('http://localhost:3333/api/1.0.0/user/'+user_id+'/post/' + post_id, { //gets the friends id and post id to find which post to delete on the wall, the delete method deleted the post in server storage
+      method: 'DELETE', //delete method to remove the post
       headers: {
         'Content-Type': 'application/json',
         'X-Authorization': session_token,
       },
-
     })
 
-      .then((response) => {//responses
-        this.getData();
-        console.log("Item deleted");
+      .then((response) => { //if deleted post then response is 200 and data is updated and post is removed from the wall, else the other resposnes will console log the issue
+        if(response.status === 200){
+          this.getData();
+          console.log("Chat deleted");
+        }else if (response.status === 401){
+          console.log("Can't delete post");
+        }else if (response.status === 403){
+          console.log("Forbidden - you can only delete your own posts");
+        }else if (response.status === 404){
+          console.log("Delete post cannot be found");
+        }else if(response.status === 500){
+          console.log("Server Error");
+        }else{//any other response prints the error to the console 
+          console.log("Something went wrong")
+        }
       })
-      .catch((error) => {
+      .catch((error) => {//any other response prints the error to the console 
         console.log(error);
       });
   };
 
-  // update
-  updatePostFriend = async(post_id) => {
-    let { user_id} = this.props.route.params;
-    const id = await AsyncStorage.getItem('@session_id');
+  
+  updatePostFriend = async(post_id) => { //updates post on friends wall, by getting the friends post id
+    let { user_id} = this.props.route.params; //gets the id of the friend, if accessed through another user
     const session_token = await AsyncStorage.getItem('@session_token');
     // const post_id = await AsyncStorage.getItem(post_id);
-    return fetch('http://localhost:3333/api/1.0.0/user/'+user_id+'/post/' + post_id, {
+    return fetch('http://localhost:3333/api/1.0.0/user/'+user_id+'/post/' + post_id, { //gets the friends id and post id to find which post to update on the wal, in the server storage 
+    //the post gets patched to be changed with
 
       headers: {
         'Content-Type': 'application/json',
         'X-Authorization': session_token,
-
       },
-      method: 'PATCH',
+      method: 'PATCH', //post gets patched to be altered, the new post will be replaced with a new post id to differenceate the posts
       body: JSON.stringify({ "text":this.state.post_id2}),
     })
 
       .then((response) => {
-        if(response.status === 200){ //responese
+        if(response.status === 200){//if updated post then response is 200 and data is updated and post is updated from the wall, else the other resposnes will console log the issue 
           this.getData();
-          console.log("post updated");
+          console.log("Post updated");
         }else if(response.status === 401){
-          console.log("Post failed");
-        }else{
-          throw 'Something went wrong';
+          console.log("Post update failed");
+        }else if (response.status === 403){
+          console.log("Forbidden - you can only update your own posts");
+        }else if (response.status === 404){
+          console.log("Update post cannot be found");
+        }else if(response.status === 500){
+          console.log("Server Error");
+        }else{//any other response prints the error to the console 
+          console.log("Something went wrong")
         }
-      }).catch((error) => {
+      }).catch((error) => {//any other response prints the error to the console 
         console.log(error);
       });
   };
 
-  // like post
-  addLike = async (post_id) => {
+  
+  addLike = async (post_id) => { //like post function on friends wall, can only friends wall posts 
     let { user_id} = this.props.route.params;
-   // let { post_id} = this.props.route.params;
     const session_token = await AsyncStorage.getItem('@session_token');
-    // const post_id = await AsyncStorage.getItem(post_id);
-    return fetch("http://localhost:3333/api/1.0.0/user/" + user_id + "/post/" + post_id + "/like", {
-      method: 'POST',
+    return fetch("http://localhost:3333/api/1.0.0/user/" + user_id + "/post/" + post_id + "/like", { 
+      //url likes the post by posting to the server using the friend id and the post id
+      method: 'POST', //methods to like post in the server
       headers: {
         'Content-Type': 'application/json',
         'X-Authorization': session_token,
       },
     })
-      .then((response) => {//add responses in
-        this.getData();
-        console.log('like done');
+      .then((response) => { //if response is 200 then the post is liked, if there are other responses then its cause of errors and it'll be logged
+        if (response.status === 200){
+           this.getData();
+           console.log('Like done');
+        }else if(response.status === 401){
+          console.log("like post failed");
+        }else if (response.status === 403){
+          console.log("Forbidden - you can only like your friends posts");
+        }else if (response.status === 404){
+          console.log("Like post cannot be done");
+        }else if(response.status === 500){
+          console.log("Server Error");
+        }else{ //any other response prints the error to the console 
+          console.log("Something went wrong")
+        }
       })
-      .catch((error) => {
+      .catch((error) => { //any other response prints the error to the console 
         console.log(error);
       });
   };
 
-  // remove like
-  removeLike = async (post_id) => {
-    let { user_id} = this.props.route.params;
+  
+  removeLike = async (post_id) => { //remvoe like on post function on friends wall, can only friends wall posts
+    let { user_id} = this.props.route.params; //gets the friend user id 
     const session_token = await AsyncStorage.getItem('@session_token');
-    // const post_id = await AsyncStorage.getItem(post_id);
-   // let {post_id} =this.props.route.params;
-    return fetch("http://localhost:3333/api/1.0.0/user/"+user_id+"/post/"+post_id+"/like", {
+
+    return fetch("http://localhost:3333/api/1.0.0/user/"+user_id+"/post/"+post_id+"/like", {  //url likes the post by posting to the server using the friend id and the post id, 
+    //however the method uses DELETE so that will remove the like from the post
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
         'X-Authorization': session_token,
       },
     })
-      .then((response) => {//add responses
-        this.getData();
-        console.log('like deleted');
+      .then((response) => {
+       //if response is 200 then the post is like is removed, if there are other responses then its cause of errors and it'll be logged
+        if(response.status === 200){
+          this.getData();
+          console.log('Like deleted');
+        }else if(response.status === 401){
+          console.log("Remove like post failed");
+        }else if (response.status === 403){
+          console.log("Forbidden - you can only remove like your friends posts");
+        }else if (response.status === 404){
+          console.log("Remove ;ike post cannot be done");
+        }else if(response.status === 500){
+          console.log("Server Error");
+        }else{ //any other response prints the error to the console 
+          console.log("Something went wrong")
+        }
       })
-      .catch((error) => {
+      .catch((error) => { //any other response prints the error to the console 
         console.log(error);
       });
   };
 
-displayPost(item){
-  console.log(item)
-  if(item.author.user_id==this.state.id){
-
+displayPost(item){ //the display fucntion, validates who posted which post using the ids, and condtionally renders the post in accordance 
+  if(item.author.user_id==this.state.id){ // if the friend id and user are the same then, you can update, delete, and your post will show with your name
     return(
-
-      <View  style={styles.container}>
+      // the stlye container will seperate the posts
+      <View  style={styles.container}> 
         <TextInput placeholder = 'UPDATE YOUR POST'
           style={{fontSize: 25, backgroundColor: '#ffffff',textAlign:'center',
             marginLeft: 10,marginRight:10, marginTop: 10,marginBottom:10, borderWidth: 2}}
           onChangeText={value => this.setState({post_id2: value})}
           value={this.state.post_id2}/>
+
+          {/* user allowed to update their own post on friends wall, as well as update and delete using the buttons below */}
 
         <TouchableOpacity>
             <Text onPress={() => this.updatePostFriend(item.post_id)} style={styles.upDatePost} > UPDATE POST </Text>
@@ -264,14 +305,14 @@ displayPost(item){
             <Text onPress={() => this.deletePostFriends(item.post_id)} style={styles.delpost} > DELETE POST </Text>
         </TouchableOpacity>
 
+        {/* displays who's post it is with their details */}
         <Text style={styles.frinedPost}> {item.author.first_name} {item.author.last_name}:  {item.text}</Text>
 
       </View>
       );
   }
 
-
-   else{
+   else{ //else if the ids aren't the same, then user can only like and remove on the friends posts on the friends wall
     return(
       <View style={styles.container1}>
 
@@ -291,40 +332,44 @@ displayPost(item){
 
 }
 
-getUserDetails = async() => {
+getUserDetails = async() => { //this function gets the details of ids that requires such as name, surename and email etc
   let { user_id} = this.props.route.params;
   const id = await AsyncStorage.getItem('@session_id');
   const token = await AsyncStorage.getItem('@session_token');
   console.log(user_id);
-  return fetch("http://localhost:3333/api/1.0.0/user/"+ user_id, {
+  return fetch("http://localhost:3333/api/1.0.0/user/"+ user_id, { //get the user information from the server in aysnc storage
     method: 'GET',
     headers: {
       'X-Authorization': token,
     },
   })
-  .then((response) => {
+  .then((response) => { //if getting the details is correct then the data gets stored in array called userDetails to access, any other response will mean theres an error and
+    //will be console logged
     if (response.status === 200) {
       return response.json();
-    } if (response.status === 400) {
-      console.log('Error');
-    } else {
-      throw 'Something went wrong';
+    } if (response.status === 401) {
+      console.log('Error with getting the user details');
+    } else if (response.status === 404){
+      console.log('User details not found');
+    }
+    else { //any other response prints the error to the console 
+      console.log('Something went wrong');
     }
   })
   .then((responseJson) => {
     console.log(responseJson)
     this.setState({
-      //add userDetails in constructor at the
+      //add resposne into userDetails array
       userDetails:responseJson
     });
-  })
-  .catch((error) => {
-    console.log(error);
+  }) 
+  .catch((error) => { //any other response prints the error to the console 
+    console.log(error); 
   });
 };
 
 
-  render() {
+  render() { //renders the friends profile page 
     return (
 
       <View style={styles.background}>
@@ -342,13 +387,13 @@ getUserDetails = async() => {
                   borderWidth: 0,
                   }}
                 />
+                {/* display the image of the friend and their detials like name and friends count */}
 
 
                 <Text style={styles.post2}> FRIEND NAME: {this.state.userDetails.first_name} {this.state.userDetails.last_name}</Text>
                 <Text style={styles.post3}> FRIEND COUNT: {this.state.userDetails.friend_count}</Text>
 
-
-
+                  {/* user (who ain't the friend) can post on the friend wall and the post the wall */}
         <TextInput placeholder = 'Enter Your Post On Friend Wall:'
             style={{fontSize: 25, backgroundColor: '#ffffff',textAlign:'center',
             marginLeft: 10,marginRight:10, marginTop: 25, marginBottom:10, borderWidth: 2}}
@@ -359,6 +404,8 @@ getUserDetails = async() => {
           <Text onPress={() => this.newPostFriends()} style={styles.post} > ADD NEW POST </Text>
         </TouchableOpacity>
 
+
+        {/* the FlatList uses post data and the fucntion passed in the item which determaines who posted what on the wall and will seperate in accordance */}
         <FlatList
           data={this.state.postData}
           renderItem={({item}) =>(this.displayPost(item))}
@@ -370,7 +417,7 @@ getUserDetails = async() => {
   }
 }
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create({ //style sheet for the friends profile page
   background: {
     backgroundColor: '#800000',
     flex: 1,
