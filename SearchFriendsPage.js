@@ -13,6 +13,7 @@ class FriendPages extends Component {
             followers: [],
             following: [],
             foundUser: [],
+            friendsData: [],
             search: "",
             profileImage: "",
             userid1: "",
@@ -20,17 +21,34 @@ class FriendPages extends Component {
             useremail: "",
             username: "",
             name: "",
-            followersNames: "",
-            followingNames: "",
             token: "",
             query:""
         }
+    };
+
+    componentDidMount() {
+      this.unsubscribe = this.props.navigation.addListener('focus', () => {
+        this.checkLoggedIn();
+   
+      });
+      this.getData();
+    }
+  
+    componentWillUnmount() {
+      this.unsubscribe();
+    }
+  
+    checkLoggedIn = async () => {
+      const value = await AsyncStorage.getItem('@session_token');
+      if (value == null) {
+          this.props.navigation.navigate('LoginPage');
+      }
     };
     getData = async () => {
         const token = await AsyncStorage.getItem('@session_token');
         const id = await AsyncStorage.getItem('@session_id');
         
-        return fetch("http://localhost:3333/api/1.0.0/search?search_in=friends&q=", {
+        return fetch("http://localhost:3333/api/1.0.0/search?search_in=friends&q=" + this.state.query, {
               headers: {
                 'X-Authorization':  token
               },
@@ -57,24 +75,7 @@ class FriendPages extends Component {
       })
   }
 
-    componentDidMount() {
-        this.unsubscribe = this.props.navigation.addListener('focus', () => {
-          this.checkLoggedIn();
-     
-        });
-        this.getData();
-      }
-    
-      componentWillUnmount() {
-        this.unsubscribe();
-      }
-    
-      checkLoggedIn = async () => {
-        const value = await AsyncStorage.getItem('@session_token');
-        if (value == null) {
-            this.props.navigation.navigate('Log In');
-        }
-      };
+  
 
 
 

@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
-import {
-  Text, TextInput, View, StyleSheet, TouchableOpacity
-} from 'react-native';
+import {Text, TextInput, View, StyleSheet, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 class LoginPage extends Component { // login pager where the user enter their details and log in
@@ -11,13 +9,14 @@ class LoginPage extends Component { // login pager where the user enter their de
     this.state = {
       isLoading: true,
       id: '',
-      email: 'steve@gmail.com',
-      password: 'password',
+      email: '',
+      password: '',
     };
   }
 
   // login method, posts the login to the server and navigates to the profile page
-  Login = async () => fetch('http://localhost:3333/api/1.0.0/login', { // query to sent to the sever
+  Login = async () => {
+    return fetch('http://localhost:3333/api/1.0.0/login', { // query to sent to the sever
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -29,9 +28,11 @@ class LoginPage extends Component { // login pager where the user enter their de
       // response 200 if user details correct, response is returned, any other response is because of the wrong details or sever
       if (response.status === 200) {
         return response.json();
-      } else if (response.status === 400) {
-        console.log('Invalid email or password');
-      } else if(response.status === 500){
+      } 
+      else if (response.status === 400) {
+        console.log('Invalid email or password or non-existant account');
+      } 
+      else if(response.status === 500){
         console.log("Server Error");
       }
       else {
@@ -39,17 +40,17 @@ class LoginPage extends Component { // login pager where the user enter their de
       }
     })
     .then(async (responseJson) => {
-      // set the user details stored in AsyncStorage, navigted to the profile page
+      // set the user details stored in AsyncStorage, navigtes to the profile page, when responseJson is recived
       console.log(responseJson);
       await AsyncStorage.setItem('@session_id', responseJson.id);
       await AsyncStorage.setItem('@session_token', responseJson.token);
       this.props.navigation.navigate('ProfilePage');
     })
     .catch((error) => {
-      // any other error gets caught and printed
+      // any other errors gets caught and printed
       console.log(error);
     });
-
+  }
   // render the login page
   render() {
     return (
@@ -71,7 +72,7 @@ class LoginPage extends Component { // login pager where the user enter their de
             borderWidth: 2,
           }}
           onChangeText={(value) => this.setState({ email: value })}
-          value={this.state.email}
+          value={this.state.email} //Email values and password values passed and set, it will be checked
         />
 
         <TextInput
@@ -90,11 +91,12 @@ class LoginPage extends Component { // login pager where the user enter their de
           secureTextEntry
           value={this.state.password}
         />
-
+        {/* login button to go into the app */}
         <TouchableOpacity>
           <Text onPress={() => this.Login()} style={styles.signIn}> SIGIN IN</Text>
-        </TouchableOpacity>
-
+        </TouchableOpacity> 
+        
+          {/* signup button, for user who hasn't created an account */}
         <TouchableOpacity>
           <Text onPress={() => this.props.navigation.navigate('SignUpPage')} style={styles.signUp}> SIGN UP</Text>
         </TouchableOpacity>
@@ -103,7 +105,7 @@ class LoginPage extends Component { // login pager where the user enter their de
     );
   }
 }
-// Style sheet for design
+// Style sheet for login page design
 const styles = StyleSheet.create({
   background: {
     backgroundColor: '#800000',

@@ -3,8 +3,6 @@ import { Image, Text, TextInput, View, StyleSheet, TouchableOpacity,FlatList } f
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
-
-
 class ProfilePage extends Component {
   constructor(props){
     super(props);
@@ -39,6 +37,15 @@ class ProfilePage extends Component {
     
   }
     
+
+  checkLoggedIn = async () => {
+    const value = await AsyncStorage.getItem('@session_token');
+    if (value == null) {
+      this.props.navigation.navigate('LoginPage');
+    }
+  };
+    
+
   getData = async () => {
     const id = await AsyncStorage.getItem('@session_id');
     const value = await AsyncStorage.getItem('@session_token');
@@ -69,13 +76,9 @@ class ProfilePage extends Component {
         console.log(error);
       });
   };
-    
-  checkLoggedIn = async () => {
-    const value = await AsyncStorage.getItem('@session_token');
-    if (value == null) {
-      this.props.navigation.navigate('LoginPage');
-    }
-  };
+
+
+
 
   //send message to server if already authenticated, wait on a promise before doing anything else
   newPost = async () => {
@@ -94,7 +97,7 @@ class ProfilePage extends Component {
           'X-Authorization': session_token,
         },
       
-      }).then(resp => {
+      }).then(resp => {//responses
         console.log("Chat publised");
         this.getData();
       })
@@ -117,7 +120,7 @@ class ProfilePage extends Component {
       .then((res) => {
         return res.blob();
       })
-      .then((resBlob) => {
+      .then((resBlob) => {//responses
         let data = URL.createObjectURL(resBlob);
         this.setState({
           photo: data,

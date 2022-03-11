@@ -46,7 +46,7 @@ class requestfriends extends Component { //friends request page, where user sear
         .then((response) => {
             if(response.status === 200){
                return response.json()
-            }else if(response.status === 400){
+            }else if(response.status === 400){//401 and 50
               console.log("Error")
             }else{
                 throw 'Something went wrong';
@@ -67,7 +67,7 @@ class requestfriends extends Component { //friends request page, where user sear
   checkLoggedIn = async () => {
     const value = await AsyncStorage.getItem('@session_token');
     if (value == null) {
-        this.props.navigation.navigate('Log In');
+        this.props.navigation.navigate('LoginPage');
     }
   };
 

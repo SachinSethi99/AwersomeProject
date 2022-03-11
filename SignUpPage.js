@@ -1,11 +1,9 @@
-/* eslint-disable react/no-unused-state */
 import React, { Component } from 'react';
-import {
-  Text, TextInput, View, StyleSheet, TouchableOpacity,
-} from 'react-native';
+import {Text, TextInput, View, StyleSheet, TouchableOpacity} from 'react-native';
+//imports used for the signup page
 
 class SignUpPage extends Component { // sign up page where user enter their details to create an account
-  // props declared
+  // props declared for what the user needs to pass through
   constructor(props) {
     super(props);
     this.state = {
@@ -31,31 +29,32 @@ class SignUpPage extends Component { // sign up page where user enter their deta
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(to_Send), // strings the parameters
+      body: JSON.stringify(to_Send), // strings the parameters, that will be set the server
     })
       .then((response) => {
         // responses if sucessful and unsucessful
-        if (response.status === 201) {
+        if (response.status === 201) { //if resonse sucessfull then user can log in with those details
           this.props.navigation.navigate('LoginPage');
         } else if (response.status === 400) {
           console.log('Email and password already used before or both email password are invlaid');
         } else if (response.status ===500){
           console.log("Server Error");
         }
-        else {  
+        else {  //errors that will be printed to the console if responses aren't met
            console.log('Error Crash, unable to commute');
         }
-      }).catch((error) => {
+      }).catch((error) => { //any other caught errors will be displayed to the conosoler
         console.log(error);
       });
-  };// connect to the API, get the token on the website, I can see it
+  };
 
-  render() {
+  render() { //display the sign up page
     return (
-    // display the titles, pass in the details to create an account
       <View style={styles.background}>
         <Text style={styles.title}> SPACEBOOK </Text>
 
+        {/* user enters their details the text boxes, the the text boxes sets those vaules to the correct props, in which that information goes into the 
+        server as their new account details */}
         <Text style={styles.details}>ENTER DETAILS</Text>
         <TextInput
           placeholder="FIRST NAME"
@@ -121,7 +120,8 @@ class SignUpPage extends Component { // sign up page where user enter their deta
           onChangeText={(value) => this.setState({ password: value })}
           value={this.state.password}
         />
-
+        
+        {/* user clicks on the button to create the account */}
         <TouchableOpacity>
           <Text onPress={() => this.SignUp()} style={styles.createAccount}> CREATE ACCOUNT</Text>
         </TouchableOpacity>

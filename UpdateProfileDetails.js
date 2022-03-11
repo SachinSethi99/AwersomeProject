@@ -24,7 +24,7 @@ class editProfileDetails extends Component {
   updateDetails = async () => {//function to update the user details
     //placeholder to update the details
     const to_Send = {};
-    //if statements to check if the details are not the same
+    //if statements to check if the details are not the same, it sets new user details
     if (this.state.first_name != this.state.new_first_name) {
       to_Send.first_name = this.state.first_name;
     }
@@ -51,8 +51,8 @@ class editProfileDetails extends Component {
     })
       .then((response) => {
         if (response.status === 200) {
-          this.props.navigation.navigate('LoginPage'); //if details successful then user has to enter their details again
-        } else if(response.status ===400){
+          this.props.navigation.navigate('LoginPage'); //if details successful then user has to enter their details again by going to the login page
+        } else if(response.status ===400){//any unsucessfule responses will display what the issue is
             console.log("Bad Request");
         }
         else if (response.status === 401) {
@@ -67,10 +67,10 @@ class editProfileDetails extends Component {
         else if (response.status === 500) {
             console.log("Server Error");
         } 
-        else {
-          throw 'Error Crash, unable to commute';
+        else {//errors out the responses will be display another reason
+          console.log("Error Crash, unable to commute");
         }
-      }).catch((error) => {
+      }).catch((error) => { //any responses that aren't triggered will print an error
         console.log(error);
       });
   };
@@ -138,6 +138,7 @@ class editProfileDetails extends Component {
           <Text onPress={() => this.updateDetails()} style={styles.updateAccount}> UPDATE ACCOUNT</Text>
         </TouchableOpacity>
 
+          {/* user has the option to navigate to the logout page, most logouts are done in a setting page or tab */}
         <TouchableOpacity>
           <Text onPress={() => this.props.navigation.navigate('LogOutPage')} style={styles.delpost}> LOG OUT</Text>
         </TouchableOpacity>
